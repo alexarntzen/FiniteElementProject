@@ -74,7 +74,7 @@
 
 \begin{frontmatter}
 
-\title{HEI HEI}
+\title{Element method project 1}
 \author[matematikk]{Håkon Noren}
 
 \author[matematikk]{Alexander Johan Arntzen }
@@ -98,6 +98,65 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Teori}
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\subsection{Variational form}
+
+Given the two dimensional Poisson problem
+
+\begin{equation}
+\begin{aligned}
+    \nabla^2 u(x,y) &= - f(x,y)
+    \\
+    u(x,y) |_{r=1} &= 0
+\end{aligned}
+\end{equation}
+
+on the domain $\Omega$ given by the unit disk
+
+\begin{equation}
+    \Omega = \{(x,y) : x^2+ y^2 \leq 1 \}
+\end{equation}
+
+The weak formulation is given by 
+
+
+\begin{equation}
+\begin{aligned}
+    a(u,v) &= \iint\limits_{\Omega} \nabla u \cdot \nabla v \, dx \, dy
+    \\
+    l(v) &= \iint\limits_{\Omega} fv \, dx \, dy
+\end{aligned}
+\end{equation}
+
+In our case we have
+
+\begin{equation}
+\begin{aligned}
+    \nabla^2u &=  -f
+    \\
+    \nabla^2uv &= -fv
+    \\
+     \iint\limits_{\Omega} \nabla^2uv \, dx \, dy &=  -\iint\limits_{\Omega} fv \, dx \, dy
+    \\
+    \end{aligned}
+\end{equation}
+
+As $\nabla^2u = u_{xx} + u_{yy}$ we use integration by parts to find
+
+\begin{equation}
+    \iint\limits_{\Omega} u_{xx}v \, dx \, dy 
+    = \underbrace{u_xv |_{\partial \Omega}}_{=0} - \iint\limits_{\Omega} u_xv_x \, dx \, dy 
+\end{equation}
+    
+
+\begin{equation}
+\begin{aligned}
+    \implies
+    \iint\limits_{\Omega} \nabla^2uv \, dx \, dy &= \iint\limits_{\Omega} (u_xv_x + u_yv_y)v \, dx \, dy \\
+    &= \iint\limits_{\Omega} \nabla u \cdot \nabla v \, dx \, dy 
+\end{aligned}
+\end{equation}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Metode og apparatur}
