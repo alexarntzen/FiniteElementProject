@@ -36,7 +36,7 @@ def make_barycentric_to_R2(p1, p2, p3):
 def vertices_to_area_2D(p1, p2, p3):
     return np.abs(0.5*((p2[0]-p1[0])*(p3[1] -p1[1])- (p2[1]-p1[1])*(p3[0]-p1[0])))
 
-def quadrature2D(p1, p2, p3, Nq, g):
+def quadrature2D    (p1, p2, p3, Nq, g):
     barycentric_to_R2 = make_barycentric_to_R2(p1, p2, p3)
     I = 0
     for row in quadrature_table_2D[Nq]:
