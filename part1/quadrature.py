@@ -42,4 +42,3 @@ def quadrature2D    (p1, p2, p3, Nq, g):
     for row in quadrature_table_2D[Nq]:
         I += g(barycentric_to_R2(*(row[0])))*row[1]
     return I*vertices_to_area_2D(p1,p2,p3)
-
