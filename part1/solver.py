@@ -65,9 +65,9 @@ def solve(p,tri,edge,Nq,f):
     #solving AU = F
     U = np.linalg.solve(A,F)
         
-    return A,F
+    return U
 
-U = make_A_F(p,tri,edge,4,f)
+U = solve(p,tri,edge,4,f)
 
 #analytical solution
 def u(x):
@@ -75,5 +75,7 @@ def u(x):
 
 fig = plt.figure()
 ax = fig.gca(projection='3d')
-ax.plot_trisurf(p[:,0],p[:,1],u(p.T)-U)
+#ax.plot_trisurf(p[:,0],p[:,1],U)
+
+ax.plot_trisurf(p[:,0],p[:,1],U-u(p.T))
 
