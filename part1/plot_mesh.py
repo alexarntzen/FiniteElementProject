@@ -1,10 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
-import getdisc as gd
-
-N = 100
-p,tri,edge = gd.GetDisc(N)
 
 def plot_disc(p,tri):
     new_tri = np.concatenate((
@@ -13,5 +9,3 @@ def plot_disc(p,tri):
     plt.gca().add_collection(LineCollection(p[new_tri]))
     plt.show()
     
-#plot_disc(p,tri)
-
