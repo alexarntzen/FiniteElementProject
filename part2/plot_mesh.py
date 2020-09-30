@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 import getdisc as gd
 
-N = 4
+N = 200
 p,tri,edge = gd.GetDisc(N)
 
 def plot_disc(p,tri):
@@ -14,7 +14,7 @@ def plot_disc(p,tri):
         line_segments[i,3,:] = p[t[0]]
     
     plt.scatter(p[:,0],p[:,1])
-    plt.gca().add_collection(LineCollection(seg))
+    plt.gca().add_collection(LineCollection(line_segments))
     plt.show()
     
 plot_disc(p,tri)
