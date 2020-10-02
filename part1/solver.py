@@ -1,24 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.collections import LineCollection
-from mpl_toolkits.mplot3d import Axes3D
-import getdisc as gd
-import plot_mesh as pm
 import quadrature as qd
-
-N = 300
-
-#p is coordinates of all nodes
-#tri is a list of indicies (rows in p) of all nodes belonging to one element
-#edge is lists of all nodes on the edge
-p,tri,edge = gd.GetDisc(N)
-#pm.plot_disc(p, tri)
-
-
-#right hand side of the equation  "load"
-def f(x):
-    r2 = x[0]**2 + x[1]**2
-    return -8*np.pi*np.cos(2*np.pi*r2) + 16*np.pi**2*r2*np.sin(2*np.pi*r2)    
 
 def solve(p,tri,edge,Nq,f):
     n_bar = len(p)
@@ -67,15 +48,4 @@ def solve(p,tri,edge,Nq,f):
         
     return U
 
-U = solve(p,tri,edge,4,f)
-
-#analytical solution
-def u(x):
-    return np.sin(2*np.pi*(x[0]**2+x[1]**2))
-
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-#ax.plot_trisurf(p[:,0],p[:,1],U)
-
-ax.plot_trisurf(p[:,0],p[:,1],U-u(p.T))
 

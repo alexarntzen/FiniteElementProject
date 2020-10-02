@@ -59,7 +59,7 @@ class TestQuadratureMethods(unittest.TestCase):
         print("Testing 1D quadrature on log function")
         for Nq in [1, 3, 4]:
             print(f"I_{Nq} error:", quadrature2D(p1, p2, p3, Nq, g) - I_analytic)
-            self.assertAlmostEqual(quadrature2D(p1, p2, p3, Nq, g),I_analytic, delta=1)
+            self.assertAlmostEqual(quadrature2D(p1, p2, p3, Nq, g),I_analytic, delta=1/Nq)
 
 
 if __name__ == '__main__':
