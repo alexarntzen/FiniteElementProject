@@ -23,8 +23,9 @@ class TestSolver(unittest.TestCase):
 
             # analytical solution
             U = solve(p, tri, edge, 4, f)
-
-            self.assertAlmostEqual(np.max(np.abs(U-u(p.T))),0,delta=1e2/N)
+            max_error = np.max(np.abs(U-u(p.T)))
+            print(f"N = {N}, max error:", max_error)
+            self.assertAlmostEqual(max_error,0,delta=1e2/N)
 
     def test_plot(self):
         N = 300
