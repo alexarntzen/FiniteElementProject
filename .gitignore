@@ -1,6 +1,7 @@
 .idea
 .DS_store
 *__pycache__/
+*.pyc
 
 *.aux
 *.lof
