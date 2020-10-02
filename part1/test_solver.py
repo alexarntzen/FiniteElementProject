@@ -14,7 +14,8 @@ def f(x):
 
 class TestSolver(unittest.TestCase):
     def test_compare_analytic(self):
-        for N in range(500, 1000, 50):
+        test_values = 2**np.arange(2,11)
+        for N in test_values:
 
             # p is coordinates of all nodes
             # tri is a list of indicies (rows in p) of all nodes belonging to one element
