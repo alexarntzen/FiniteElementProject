@@ -3,6 +3,7 @@ from solver import solve
 import numpy as np
 import getdisc as gd
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 def u(x):
     return np.sin(2 * np.pi * (x[0] ** 2 + x[1] ** 2))
