@@ -11,11 +11,14 @@ quadrature_table_1D = {
         [+ np.sqrt((3 - 2 * np.sqrt(6 / 5)) / 7), (18 + np.sqrt(30)) / 36],
         [+ np.sqrt((3 + 2 * np.sqrt(6 / 5)) / 7), (18 - np.sqrt(30)) / 36]]
 }
+
+
+
 def quadrature1D(a, b, Nq, g):
     I = 0
     for row in quadrature_table_1D[Nq]:
         I += g(row[0]*(b-a)/2 + (b+a) / 2)*row[1]
-    return I*(b-a) / 2
+    return I*np.linalg.norm(b-a) / 2
 
 
 quadrature_table_2D = {
