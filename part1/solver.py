@@ -1,5 +1,5 @@
 import numpy as np
-import quadrature as qd
+import part1.quadrature as qd
 
 def solve(p,tri,edge,Nq,f):
     n_bar = len(p)

@@ -1,4 +1,5 @@
 import numpy as np
+
 quadrature_table_1D = {
     1: [[0 , 2]],
     2: [[- 1 / np.sqrt(3), 1],
@@ -11,8 +12,6 @@ quadrature_table_1D = {
         [+ np.sqrt((3 - 2 * np.sqrt(6 / 5)) / 7), (18 + np.sqrt(30)) / 36],
         [+ np.sqrt((3 + 2 * np.sqrt(6 / 5)) / 7), (18 - np.sqrt(30)) / 36]]
 }
-
-
 
 def quadrature1D(a, b, Nq, g):
     I = 0

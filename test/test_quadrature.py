@@ -1,12 +1,11 @@
 import unittest
 import numpy as np
-from quadrature import quadrature1D, quadrature2D, vertices_to_area_2D
-from integrate_log import get_log_integral
+from part1.quadrature import quadrature1D, quadrature2D, vertices_to_area_2D
+from test.integrate_log import get_log_integral
 
 
 def identity(x):
     return x
-
 
 def get_one_form(z):
     return lambda x: np.inner(z, x)

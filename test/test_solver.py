@@ -1,9 +1,9 @@
 import unittest
-from solver import solve
 import numpy as np
-import getdisc as gd
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+
+from part1.solver import solve
+import test.getdisc as gd
 
 def u(x):
     return np.sin(2 * np.pi * (x[0] ** 2 + x[1] ** 2))
