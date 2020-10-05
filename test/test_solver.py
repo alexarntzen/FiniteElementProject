@@ -23,11 +23,6 @@ def g(x):
 
 
 class TestSolver(unittest.TestCase):
-    def test_plot_mesh(self):
-        N = 10
-        p, tri, edge = gd.GetDisc(N)
-        plot_disc(p, tri)
-
     def test_compare_analytic(self):
         test_values = 2 ** np.arange(4, 13)
         rel_errors = np.zeros(len(test_values))
