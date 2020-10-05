@@ -1,15 +1,17 @@
 import numpy as np
-from itertools import combinations
+
 import part1.quadrature as qd
 
 
-def compose(f,g):
+def compose(f, g):
     return lambda x: f(g(x))
 
-def function_multiply(f,g):
-    return lambda x: f(x)*g(x)
 
-def solve(p, tri, dirichlet_edges, Nq, f, g = None, neumann_edges = np.empty(0)):
+def function_multiply(f, g):
+    return lambda x: f(x) * g(x)
+
+
+def solve(p, tri, dirichlet_edges, Nq, f, g=None, neumann_edges=np.empty(0)):
     n_bar = len(p)
     A = np.zeros((n_bar, n_bar))
     F = np.zeros(n_bar)
@@ -18,7 +20,7 @@ def solve(p, tri, dirichlet_edges, Nq, f, g = None, neumann_edges = np.empty(0))
 
         # find coefficients for basis functions
 
-        XY = np.append(np.ones((3,1)), p[element], axis = 1)
+        XY = np.append(np.ones((3, 1)), p[element], axis=1)
         C = np.linalg.solve(XY, np.identity(3))
 
         # coordinates of the nodes of the element
@@ -44,8 +46,8 @@ def solve(p, tri, dirichlet_edges, Nq, f, g = None, neumann_edges = np.empty(0))
                     vertex1, vertex2 = p[element[alpha]], p[element[beta]]
                     Hb = lambda x: (C[0, beta] + C[1:3, beta] @ x)
 
-                    F[element[alpha]] += qd.quadrature1D(vertex1, vertex2, Nq, function_multiply(Ha,g))
-                    F[element[beta]] += qd.quadrature1D(vertex1, vertex2, Nq, function_multiply(Hb,g))
+                    F[element[alpha]] += qd.quadrature1D(vertex1, vertex2, Nq, function_multiply(Ha, g))
+                    F[element[beta]] += qd.quadrature1D(vertex1, vertex2, Nq, function_multiply(Hb, g))
 
         # for edge in combinations(element,2):
         #     print(edge)
@@ -53,7 +55,7 @@ def solve(p, tri, dirichlet_edges, Nq, f, g = None, neumann_edges = np.empty(0))
 
     # Applying dirichlet boundary conditions
     epsilon = 1e-15
-    for i in np.concatenate((dirichlet_edges[:, 0],dirichlet_edges[:, 1])):
+    for i in np.concatenate((dirichlet_edges[:, 0], dirichlet_edges[:, 1])):
         A[i, :] = 0
         A[:, i] = 0
         A[i, i] = 1
