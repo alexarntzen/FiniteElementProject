@@ -4,9 +4,12 @@ on:
   push:
     paths:
     - 'report/**'
+    - '.github/workflows/compile_latex.yml'
   pull_request:
     paths:
     - 'report/**'
+    - '.github/workflows/compile_latex.yml'
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
