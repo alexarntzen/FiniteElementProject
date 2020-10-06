@@ -20,7 +20,9 @@
 *.fdb_latexmk
 report/main.pdf
 
-
+# To not include generated figures in project
+figures/*
+test/figures
 
 ## Intermediate documents:
 *.dvi
