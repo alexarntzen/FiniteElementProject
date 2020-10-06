@@ -33,14 +33,11 @@ jobs:
       - name: Test with unittest
         run: |
           python -m unittest
-      - name: run test
-        run: ls; pwd;
       - name: Compile LaTeX document
         uses: dante-ev/latex-action@v0.2.0
         with:
           root_file: report/main.tex
-
       - uses: actions/upload-artifact@v2
         with:
           name: compiled_document.pdf
-          path: report/main.pdf
+          path: main.pdf
