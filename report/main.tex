@@ -51,7 +51,6 @@
 \makeatother
 % Fjerner submitte dto 
 
-
 \newcommand\restr[2]{\ensuremath{\left.#1\right|_{#2}}}
 
 % Denne setter navnet på abstract til Sammendrag
@@ -81,6 +80,7 @@
 \newtheorem*{example}{Example}
 \newtheorem*{remark}{Remark}
 
+\graphicspath{{../}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -331,9 +331,9 @@ Solving the Poisson problem by using Galerkin projection on a mesh disc we seem 
 the set of nodes given by $N_n = \{ 2^n\}_{n=4}^{12}$, as seen in figure \ref{convergence}. The numerical solution for $N = 1024$ nodes is plotted in figure \ref{solution-error}
 together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is located on our domain $\Omega$.
 
-\begin{figure}[tbp]
+\begin{figure}[ht]
     \centering
-        \includegraphics[scale=0.7]{../figures/plot_homogeneous_dirichlet.pdf}
+        \includegraphics[scale=0.7]{figures/plot_homogeneous_dirichlet.pdf}
     \caption{The poission problem solved on a disc mesh with $N = 1024$ nodes.
     The top plot displays the numerical solution from the Galerkin projection,
     while the bottom figure displays the error in the nodal points.}
@@ -342,7 +342,7 @@ together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is locate
 
 \begin{figure}[tbp]
     \centering
-        \includegraphics[scale=0.5]{../figures/convergence_homogeneous_dirichlet.pdf}
+        \includegraphics[scale=0.5]{figures/convergence_homogeneous_dirichlet.pdf}
     \caption{Relative error when solving for multiple mesh discs with the number of nodes given by $N_n = \{ 2^n\}_{n=4}^{12}$
     where $N_{min} = 16$ and $N_{max} = 4096$.}
     \label{convergence}
