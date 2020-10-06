@@ -51,8 +51,9 @@
 \makeatother
 % Fjerner submitte dto 
 
-
-\newcommand\restr[2]{\ensuremath{\left.#1\right|_{#2}}}
+% math stuff
+\newcommand{\restr}[2]{\ensuremath{\left.#1\right|_{#2}}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
 % Denne setter navnet på abstract til Sammendrag
 \renewenvironment{abstract}{\global\setbox\absbox=\vbox\bgroup
@@ -80,6 +81,9 @@
 \newtheorem*{observation}{Observation}
 \newtheorem*{example}{Example}
 \newtheorem*{remark}{Remark}
+
+\graphicspath{{../}}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -184,68 +188,68 @@ $u$ defined in \eqref{analytical-solution} satisfies \eqref{poission-problem} wi
 \end{equation*}
 \end{proposition}
 \begin{proof}
-    For the unit disk $\Omega$ the normal $\boldsymbol n$ is calculated to be $\boldsymbol{n} = \boldsymbol{e}_r$, were $ \boldsymbol{e}_r$ is the unit vector in the radial direction. Then 
+    The surface normal $\boldsymbol n$ to the unit disk $\Omega$ is the unit vector in the radial direction. Then 
     \begin{equation*}
         \frac{\partial u}{\partial n} = \frac{\partial u}{\partial r},
     \end{equation*}
-    and by qalqualtion in polar coordinates
+    and by calculation in polar coordinates
     \begin{equation*}
-        \frac{\partial u}{\partial r} = 4 \pi r \sin(2*\pi*r^2) = g(r,\theta)
+        \frac{\partial u}{\partial r} = 4 \pi r \sin(2\pi r^2) = g(r,\theta)
     \end{equation*}
-
 \end{proof}
 
 \subsection{Weak formulation}
 
 
-The weak formulation is given by 
-
-
-\begin{equation*}
-\begin{aligned}
-    a(u,v) &= \iint\limits_{\Omega} \nabla u \cdot \nabla v \, dx \, dy
-    \\
-    l(v) &= \iint\limits_{\Omega} fv \, dx \, dy
-\end{aligned}
-\end{equation*}
-
-In our case we have
-
-\begin{equation*}
-\begin{aligned}
-    \nabla^2u &=  -f
-    \\
-    \nabla^2uv &= -fv
-    \\
-     \iint\limits_{\Omega} \nabla^2uv \, dx \, dy &=  -\iint\limits_{\Omega} fv \, dx \, dy
-    \\
-    \end{aligned}
-\end{equation*}
-
-As $\nabla^2u = u_{xx} + u_{yy}$ we use integration by parts to find
-
-\begin{equation*}
-    \iint\limits_{\Omega} u_{xx}v \, dx \, dy 
-    = \underbrace{u_xv |_{\partial \Omega}}_{=0} - \iint\limits_{\Omega} u_xv_x \, dx \, dy 
-\end{equation*}
+\begin{proposition}
+    The weak formulation of \eqref{poission-problem} with homogeneous dirichlet boundary conditions is given by: find 
+    \begin{equation*}
+        u \in H_0^{1}(\Omega) : a(u,v) = l(v) \ \forall v \ \in H_0^{1}(\Omega), 
+    \end{equation*}
+    where $a$ is a bilinear functional and $l$ a linear functional defined as 
+    \begin{equation*}
+        \begin{aligned}
+            a(u,v) &= \iint\limits_{\Omega} \nabla u \cdot \nabla v \, dx \, dy
+            \\
+            l(v) &= \iint\limits_{\Omega} fv \, dx \, dy.
+        \end{aligned}
+    \end{equation*}
+\end{proposition}
+\begin{proof}
+    Assume $u$ satisfies \eqref{poission-problem}. Then mulitplying by a test function $v$ and integration over $\Omega$ results in the folloiwng integral equation
+    \begin{equation}
+        \label{weak-start}
+        \begin{aligned}
+            \iint\limits_{\Omega} \nabla^2uv \, dx \, dy &=  -\iint\limits_{\Omega} fv \, dx \, dy.\ 
+        \end{aligned}
+    \end{equation}
+    Applying Green's first identety and the fact that $\frac{\partial u}{\partial n} = 0$ on $\partial \Omega$ gives
+    \begin{equation}
+        \iint\limits_{\Omega} \nabla^2 u v \, dx \, dy 
+        = \underbrace{\int_{\partial \Omega} \frac{\partial u}{\partial n} v \, d\gamma}_{=0} + \iint\limits_{\Omega} \nabla u \cdot \nabla v  \, dx \, dy,
+        % &= \int_{\partial \Omega_N} \frac{\partial u}{\partial n} v \, d\gamma + \iint\limits_{\Omega} \nabla u \cdot \nabla v  \, dx \, dy \\
+        \label{greens-identety}
+    \end{equation}
+    which we can apply to get 
+    \begin{equation}
+        \iint\limits_{\Omega} \nabla u \cdot \nabla v \, dx \, dy = 
+        \iint\limits_{\Omega} fv \, dx \, dy.
+    \end{equation}
     
-
-\begin{equation*}
-\begin{aligned}
-    \implies
-    \iint\limits_{\Omega} \nabla^2uv \, dx \, dy &= \iint\limits_{\Omega} (u_xv_x + u_yv_y)v \, dx \, dy \\
-    &= \iint\limits_{\Omega} \nabla u \cdot \nabla v \, dx \, dy 
-\end{aligned}
-\end{equation*}
-
-Where we assumed that this holds  $\forall v \in X$ where we then have to assume that the space $X$ is defined By
-
-\begin{equation*}
-    \begin{aligned}
-        X &= \{v \in H^1(\Omega) : v|_{\partial \Omega = 0} \} \\
-         &= H^1_0(\Omega)
-    \end{aligned}
-\end{equation*}
+    Since $v$ was arbitrary the weak formulation follows. Furthermore, all $u$ and $v$ must belong to a space such that $\nabla u \cdot \nabla v \in {L^1}(\Omega)$, where derivatives are of the weak form. Then $\nabla u$ and $\nabla v$ must be in ${L^2}(\Omega)$, while $u$ and$ v$ must be in ${H^1_0}(\Omega)$.
+    
+    Finally, linearity and bilinearity of $l$ and $a$ follows directly from linearity of the weak derivative and the integral.
+\end{proof}
+\begin{remark}
+    When Neumann boundary conditions are considered we have to change the space of test functions to 
+    \begin{equation*}
+        H^1_{\partial \Omega_D } = \{v \in H^1(\Omega):\restr{v}{\partial \Omega_D }=0 \}.
+    \end{equation*}
+    This changes $a$ and $l$, as they now operate on a new funciton space. In addition the expression for $l$ changes to
+    \begin{equation*}
+        l(v) = \int_{\partial \Omega_N} \frac{\partial u}{\partial n} v \, d\gamma + \iint\limits_{\Omega} \nabla u \cdot \nabla v  \, dx \, dy.
+    \end{equation*}
+\end{remark}
 
 \subsection{Galerkin projection}
 
@@ -331,9 +335,9 @@ Solving the Poisson problem by using Galerkin projection on a mesh disc we seem 
 the set of nodes given by $N_n = \{ 2^n\}_{n=4}^{12}$, as seen in figure \ref{convergence}. The numerical solution for $N = 1024$ nodes is plotted in figure \ref{solution-error}
 together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is located on our domain $\Omega$.
 
-\begin{figure}[tbp]
+\begin{figure}[ht]
     \centering
-        \includegraphics[scale=0.7]{../figures/plot_homogeneous_dirichlet.pdf}
+        \includegraphics[scale=0.7]{figures/plot_homogeneous_dirichlet.pdf}
     \caption{The poission problem solved on a disc mesh with $N = 1024$ nodes.
     The top plot displays the numerical solution from the Galerkin projection,
     while the bottom figure displays the error in the nodal points.}
@@ -342,7 +346,7 @@ together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is locate
 
 \begin{figure}[tbp]
     \centering
-        \includegraphics[scale=0.5]{../figures/convergence_homogeneous_dirichlet.pdf}
+        \includegraphics[scale=0.5]{figures/convergence_homogeneous_dirichlet.pdf}
     \caption{Relative error when solving for multiple mesh discs with the number of nodes given by $N_n = \{ 2^n\}_{n=4}^{12}$
     where $N_{min} = 16$ and $N_{max} = 4096$.}
     \label{convergence}
