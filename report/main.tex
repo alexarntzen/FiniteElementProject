@@ -40,6 +40,7 @@
 
 \usepackage[font=small,labelfont=bf]{caption}		% For justering av figurtekst og tabelltekst.
 
+
 \journal{ }
 \usepackage{etoolbox}
 \makeatletter
@@ -51,7 +52,7 @@
 % Fjerner submitte dto 
 
 
-
+\newcommand\restr[2]{\ensuremath{\left.#1\right|_{#2}}}
 
 % Denne setter navnet på abstract til Sammendrag
 \renewenvironment{abstract}{\global\setbox\absbox=\vbox\bgroup
@@ -67,6 +68,18 @@
 \renewcommand{\topfraction}{0.95}
 \renewcommand{\bottomfraction}{0.95}
 \renewcommand{\floatpagefraction}{0.35}
+
+
+% math stuff
+\newtheorem{theorem}{Theorem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem*{observation}{Observation}
+\newtheorem*{example}{Example}
+\newtheorem*{remark}{Remark}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -96,18 +109,17 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Teori}
+\section{Theory}
 
 \subsection{Problem}
 
-
-Given the two dimensional Poisson problem
+We consider the poisson problem with mixed homogenous Dirichlet and Neumann boundary conditions. 
 
 \begin{equation}
 \begin{aligned}
-    \nabla^2 u(x,y) &= - f(x,y)
-    \\
-    u(x,y) |_{r=1} &= 0
+    \nabla^2 u &= - f \\
+    \restr{u}{\partial \Omega_{D}}  &= 0 \\
+    \restr{\frac{\partial u}{\partial n}}{\partial \Omega_{N}} &= g,
 \label{poission-problem}
 \end{aligned}
 \end{equation}
@@ -115,48 +127,73 @@ Given the two dimensional Poisson problem
 on the domain $\Omega$ given by the unit disk
 
 \begin{equation*}
-    \Omega = \{(x,y) : x^2+ y^2 \leq 1 \}
+    \Omega = \{(x,y) : x^2+ y^2 \leq 1 \}.
 \end{equation*}
+Note that when $\partial \Omega_{D} = \partial \Omega$ we have the homogenous Dirichlet boundary conditions. 
 
-with $f$ in polar coordinates given By
 
-\begin{equation*}
-f(r,\theta) = -8\pi\cos(2\pi r^2) + 16 \pi^2r^2 \sin(2\pi r^2)
-\end{equation*}
 
-\subsection{Analytical soluion}
+\subsection{Analytical solution}
+We consider an analytical solution $u$
+\begin{proposition}
+    
+    $u: \mathbb{R}^2 \rightarrow \mathbb{R}$ such that
 
-Assume the following analytical solution
+    \begin{equation}
+    \restr{u(x,y)}{\Omega} = \sin(2\pi (x^2 + y^2)),
+    \label{analytical-solution}
+    \end{equation}
+    is a solution to the poission problem \eqref{poission-problem} with homogenous Dirichlet boundary conditions, and  $f$ in polar coordinates given by
 
-\begin{equation}
-u(x,y) = \sin(2\pi (x^2 + y^2))
-\end{equation}
-
-which we easily verify with $g = g(x,y) = 2\pi (x^2 + y^2)$
+    \begin{equation*}
+    f(r,\theta) = -8\pi\cos(2\pi r^2) + 16 \pi^2r^2 \sin(2\pi r^2)
+    \end{equation*}
+\end{proposition}
+\begin{proof}
+By calculation
 
 \begin{equation*}
 \begin{aligned}
-\frac{\partial^2u}{\partial x^2} = u_{xx} &= 4\pi\cos(g) - 16\pi^2x^2\sin(g)
+ u_{xx} &= 4\pi\cos(g(x,y)) - 16\pi^2x^2\sin(g(x,y))
 \\
-u_{yy} &= 4\pi\cos(g) - 16\pi^2y^2\sin(g)
+u_{yy} &= 4\pi\cos(g(x,y)) - 16\pi^2y^2\sin(g(x,y)),
 \end{aligned}
 \end{equation*}
 
-as $r^2 = x^2 + y^2$ we find 
-
+where $ g(x,y) = 2\pi (x^2 + y^2)$. 
+As $r^2 = x^2 + y^2$ we find by comparison
 \begin{equation*}
-    \begin{aligned}
-\nabla^2 u &= u_{xx} + u{yy}
-\\
-&= 8\pi \cos(2\pi r^2) - 16\pi^2r^2\sin(2\pi r^2)
-\\
-& = -f(x,y) & \qed
+\begin{aligned}
+\nabla^2 u &= u_{xx} + u_{yy}\\
+&= 8\pi \cos(2\pi r^2) - 16\pi^2r^2\sin(2\pi r^2)\\
+& = -f(x,y).
 \end{aligned}
 \end{equation*}
+The boundary conditions are then checked
+\begin{equation*}
+    \restr{u(x,y)}{\Omega} = \sin(2\pi) = 0,
+\end{equation*}
+and we find that $u$ fulfills all the conditions. 
+\end{proof}
+Then $u$ also reveals the corresponding problem with neumann bundary conditions. 
 
+\begin{proposition}  
+$u$ defined in \eqref{analytical-solution} satisfies \eqref{poission-problem} with $g$ given in polar coordinates as
+\begin{equation*}
+    \restr{g(r,\theta)}{\Omega_N} =   4\pi r\cos(2\pi r^2).
+\end{equation*}
+\end{proposition}
+\begin{proof}
+    For the unit disk $\Omega$ the normal $\boldsymbol n$ is calculated to be $\boldsymbol{n} = \boldsymbol{e}_r$, were $ \boldsymbol{e}_r$ is the unit vector in the radial direction. Then 
+    \begin{equation*}
+        \frac{\partial u}{\partial n} = \frac{\partial u}{\partial r},
+    \end{equation*}
+    and by qalqualtion in polar coordinates
+    \begin{equation*}
+        \frac{\partial u}{\partial r} = 4 \pi r \sin(2*\pi*r^2) = g(r,\theta)
+    \end{equation*}
 
-
-
+\end{proof}
 
 \subsection{Weak formulation}
 
@@ -296,7 +333,7 @@ together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is locate
 
 \begin{figure}[tbp]
     \centering
-        \includegraphics[scale=0.7]{solution_error.pdf}
+        \includegraphics[scale=0.7]{../figures/convergence_homogeneous_dirichlet.pdf}
     \caption{The poission problem solved on a disc mesh with $N = 1024$ nodes.
     The top plot displays the numerical solution from the Galerkin projection,
     while the bottom figure displays the error in the nodal points.}
@@ -305,7 +342,7 @@ together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is locate
 
 \begin{figure}[tbp]
     \centering
-        \includegraphics[scale=0.5]{convergence.pdf}
+        \includegraphics[scale=0.5]{../figures/convergence_homogeneous_dirichlet.pdf}
     \caption{Relative error when solving for multiple mesh discs with the number of nodes given by $N_n = \{ 2^n\}_{n=4}^{12}$
     where $N_{min} = 16$ and $N_{max} = 4096$.}
     \label{convergence}

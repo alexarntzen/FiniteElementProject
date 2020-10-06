@@ -26,7 +26,7 @@ class TestHomogeneousDirichlet(unittest.TestCase):
     def test_compare_analytic(self):
         test_values = 2 ** np.arange(4, 13)
         rel_errors = np.zeros(len(test_values))
-        print("\n Comparing homogeneous dirichlet to analytical result:")
+        print("\nComparing homogeneous dirichlet to analytical result:")
         for i, N in enumerate(test_values):
             # p is coordinates of all nodes
             # tri is a list of indicies (rows in p) of all nodes belonging to one element
@@ -75,8 +75,8 @@ class TestHomogeneousDirichlet(unittest.TestCase):
         ax.set_title("Error")
         ax.set_zlabel("$U_{i,j} - u(x_i,y_j)$")
         ax.plot_trisurf(p[:, 0], p[:, 1], U - u(p.T), cmap=cm.viridis)
-        ax.plot_trisurf(p[:, 0], p[:, 1], U)
-        plt.savefig("figures/testplot_homogeneous_dirichlet.pdf")
+        # ax.plot_trisurf(p[:, 0], p[:, 1], U)
+        plt.savefig("figures/plot_homogeneous_dirichlet.pdf")
 
 
 class TestSolverNeumann(unittest.TestCase):
@@ -84,7 +84,7 @@ class TestSolverNeumann(unittest.TestCase):
         test_values = 2 ** np.arange(4, 12)
         rel_errors = np.zeros(len(test_values))
 
-        print("\n Comparing mixed Neumann to analytical result:")
+        print("\nComparing mixed Neumann to analytical result:")
         for i, N in enumerate(test_values):
             # p is coordinates of all nodes
             # tri is a list of indicies (rows in p) of all nodes belonging to one element
@@ -137,7 +137,7 @@ class TestSolverNeumann(unittest.TestCase):
         ax.set_title("Error")
         ax.set_zlabel("$U_{i,j} - u(x_i,y_j)$")
         ax.plot_trisurf(p[:, 0], p[:, 1], U - u(p.T), cmap=cm.viridis)
-        ax.plot_trisurf(p[:, 0], p[:, 1], U)
+        # ax.plot_trisurf(p[:, 0], p[:, 1], U)
         plt.savefig("figures/plot_mixed_neumann.pdf")
 
 
