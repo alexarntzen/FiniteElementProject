@@ -98,17 +98,15 @@
 
 
 \begin{abstract}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The poisson problem with mixed homogenous Dirichlet and Neumann boundary conditions is solved numerically in two cases with a finite element metod. One case with homogeneous Dirichlet boundary conditions and one case with mixed Neumann and Dirichlet boundary conditions. The solutions are compaired to the analytic solution. The maximal error decreases with the number of degrees freedom and indicates that the metod is convergent. 
 \end{abstract}
 
 \end{frontmatter}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Innledning}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-
+\section{Introduction}
+The poisson problem with mixed homogenous Dirichlet and Neumann boundary conditions is introduced together with an analytical solution. The weak formulation of this problem is then derived together with the Galerkin projection. The finite dimetional problem is then solved  numerically for two simple cases. The result is compaired to the corresponding analytic solution. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Theory}
@@ -131,7 +129,9 @@ on the domain $\Omega$ given by the unit disk
 \begin{equation*}
     \Omega = \{(x,y) : x^2+ y^2 \leq 1 \}.
 \end{equation*}
-Note that when $\partial \Omega_{D} = \partial \Omega$ we have the homogenous Dirichlet boundary conditions. 
+\begin{remark}
+Note that when $\partial \Omega_{D} = \partial \Omega$ we have the homogenous Dirichlet boundary conditions. Also by \cite[p. 39]{AQuart} when $\partial \Omega_D = \emptyset$ the poission problem does not have a unique solution. In the rest of the text we assume $\partial \Omega_D \neq \emptyset$ 
+\end{remark}
 
 
 
@@ -161,7 +161,6 @@ By calculation
 u_{yy} &= 4\pi\cos(g(x,y)) - 16\pi^2y^2\sin(g(x,y)),
 \end{aligned}
 \end{equation*}
-
 where $ g(x,y) = 2\pi (x^2 + y^2)$. 
 As $r^2 = x^2 + y^2$ we find by comparison
 \begin{equation*}
@@ -177,10 +176,9 @@ The boundary conditions are then checked
 \end{equation*}
 and we find that $u$ fulfills all the conditions. 
 \end{proof}
-Then $u$ also reveals the corresponding problem with neumann bundary conditions. 
+Then $u$ also reveals the corresponding solution with neumann bundary conditions. 
 
 \begin{proposition}\label{analytical-solution-neumann}
-
 $u$ defined in \eqref{analytical-solution} satisfies \eqref{poission-problem} with $g$ given in polar coordinates as
 \begin{equation}
     \restr{g(r,\theta)}{\Omega_N} =  4\pi r\cos(2\pi r^2).
@@ -200,7 +198,6 @@ $u$ defined in \eqref{analytical-solution} satisfies \eqref{poission-problem} wi
 
 \subsection{Weak formulation}
 
-
 \begin{proposition}
     The weak formulation of \eqref{poission-problem} with homogeneous dirichlet boundary conditions is given by: find 
     \begin{equation*}
@@ -216,6 +213,7 @@ $u$ defined in \eqref{analytical-solution} satisfies \eqref{poission-problem} wi
     \end{equation*}
 \end{proposition}
 \begin{proof}
+    This proof is heavely influenced by \cite[p. 44-45]{AQuart}.
     Assume $u$ satisfies \eqref{poission-problem}. Then mulitplying by a test function $v$ and integration over $\Omega$ results in the folloiwng integral equation
     \begin{equation}
         \label{weak-start}
@@ -255,29 +253,23 @@ $u$ defined in \eqref{analytical-solution} satisfies \eqref{poission-problem} wi
 We now search for solutions in the finite subspace $X_h \subset X$. 
 By discretizing $\Omega$ into $M$ triangles $K_k$ defined by corner nodes $x_i$, we have basis functions corresponding to each node.
 Let 
-
 \begin{equation*}
-X_h = \{ v \in X : v|_{K_k} \in \mathbb{P}_1 (K_k),1\leq k\leq M \}
+X_h = \{ v \in X : v|_{K_k} \in \mathbb{P}_1 (K_k),1\leq k\leq M \},
 \end{equation*}
-
 and $\{\phi_i\}_{i=1}^n$ be the basis functions of $X_h$ such that
 
 \begin{equation*}
     \begin{aligned}
-X_h = \text{span} \{\phi_i\}_{i=1}^n & & \phi_j(x_i) = \delta_{ij}
+X_h = \text{span} \{\phi_i\}_{i=1}^n & & \phi_j(x_i) = \delta_{ij}.
     \end{aligned}
 \end{equation*}
-
-hence we aim to find $u_h \in X_h$ $\forall v \in X_h$, meaning we can write
-
+Hence we aim to find $u_h \in X_h$ $\forall v \in X_h$, meaning we can write
 \begin{equation*}
     \begin{aligned}
-u_h = \sum_{i=1}^n u_h^i \phi_i(x,y) & & v_h = \sum_{i=1}^n v_h^i \phi_i(x,y) 
+u_h = \sum_{i=1}^n u_h^i \phi_i(x,y) & & v_h = \sum_{i=1}^n v_h^i \phi_i(x,y).
     \end{aligned}
 \end{equation*}
-
 Hence we get the weak formulation
-
 \begin{equation}
 \begin{aligned}
 a(u_h,v_h) &= l(v_h) 
@@ -289,13 +281,11 @@ a(u_h,v_h) &= l(v_h)
 \sum_{i=1}^n\sum_{j=1}^n u_h^i v_h^i a(\phi_i,\phi_j) &= \sum_{i=1}^n v_h^i l(\phi_i)
 \\
 \bm v^T\bm A \bm u &= \bm v^T \bm f \quad \forall \bm v \in \mathbb R^n
-\\ \bm A \bm u &= \bm f
+\\ \bm A \bm u &= \bm f.
 \label{weak_formulation_matrix}
 \end{aligned}
 \end{equation}
-
-
-\noindent where we use the linearity of $a,l$. 
+where we use the linearity of $a,l$. 
 The aim is now to find $u_h$ satisfying equation \eqref{weak_formulation_matrix}, $\forall \bm v \in \mathbb R^n$.
 With $\bm A, \bm u, \bm f$ given by
 
@@ -308,11 +298,13 @@ With $\bm A, \bm u, \bm f$ given by
 \bm f &= [l(\phi_i)]_i & i,j = 1,\cdots,n
 \end{aligned}
 \end{equation}
-
+\begin{remark}
+    In the case for homogeneous Dirichlet boundary conditions $X = H_0^1(\Omega)$, with $X_h$ a subspace of $H_0^1(\Omega)$ 
+\end{remark}
 \begin{remark}
 Note that in equation \eqref{weak_formulation_matrix} $\bm A$ is singular. 
 This is a consequence of the fact that no boundary conditions has yet been enforced on the systems of equations.
-The poisson problem stated in \eqref{poission-problem} will have infinitely many solutions $u$ when boundary conditions are not considered.
+The poisson problem stated in \eqref{poission-problem} will have infinitely many solutions $u$ when boundary conditions are not considered \cite[p. 39]{AQuart}.
 The same is then true for the solution of the discretized problem $\bm u$ and hence it follows that $\bm A$ is singular.
 This is verified numerically by finding that $\text{rank}(\bm A) < n, \bm A \in \mathbb{R}^{n \times n}$.
 \end{remark}
