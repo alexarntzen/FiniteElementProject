@@ -30,7 +30,7 @@ class TestQuadratureMethods(unittest.TestCase):
     def test_exponential_1D(self):
         a = 1
         b = 2
-        print("\nTesting 1D quadrature on exponential function")
+        print("\n\nTesting 1D quadrature on exponential function")
         for Nq in range(1,5):
             print(f"I_{Nq} error:", quadrature1D(a, b, Nq, np.exp) - np.exp(b) + np.exp(a))
             self.assertAlmostEqual(quadrature1D(a, b, Nq, np.exp),  np.exp(b) - np.exp(a),delta=1)
@@ -79,7 +79,7 @@ class TestQuadratureMethods(unittest.TestCase):
         p3 = np.array([3, 2])
         g  = lambda x: np.log(np.sum(x))
         I_analytic = get_log_integral()
-        print("\nTesting 2D quadrature on log function")
+        print("\n\nTesting 2D quadrature on log function")
         for Nq in [1, 3, 4]:
             print(f"I_{Nq} error:", quadrature2D(p1, p2, p3, Nq, g) - I_analytic)
             self.assertAlmostEqual(quadrature2D(p1, p2, p3, Nq, g),I_analytic, delta=1/Nq)
