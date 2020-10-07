@@ -278,7 +278,7 @@ u_h = \sum_{i=1}^n u_h^i \phi_i(x,y) & & v_h = \sum_{i=1}^n v_h^i \phi_i(x,y)
 
 Hence we get the weak formulation
 
-\begin{equation*}
+\begin{equation}
 \begin{aligned}
 a(u_h,v_h) &= l(v_h) 
 \\
@@ -292,7 +292,7 @@ a(u_h,v_h) &= l(v_h)
 \\ \bm A \bm u &= \bm f
 \label{weak_formulation_matrix}
 \end{aligned}
-\end{equation*}
+\end{equation}
 
 
 \noindent where we use the linearity of $a,l$. 
@@ -308,11 +308,23 @@ With $\bm A, \bm u, \bm f$ given by
 \bm f &= [l(\phi_i)]_i & i,j = 1,\cdots,n
 \end{aligned}
 \end{equation}
+
+\begin{remark}
+Note that in equation \eqref{weak_formulation_matrix} $\bm A$ is singular. 
+This is a consequence of the fact that no boundary conditions has yet been enforced on the systems of equations.
+The poisson problem stated in \eqref{poission-problem} will have infinitely many solutions $u$ when boundary conditions are not considered.
+The same is then true for the solution of the discretized problem $\bm u$ and hence it follows that $\bm A$ is singular.
+This is verified numerically by finding that $\text{rank}(\bm A) < n, \bm A \in \mathbb{R}^{n \times n}$.
+\end{remark}
+
+
 \subsection{Numerical integration}
 To evaluate the integrals in the weak formulation gaussian quadrature is used. This involves calculating weights $\rho_q$ for predetermined quadrature points $z_q$ on a suitable domain, then scaling the integral
 \begin{equation}
     \int_{\hat{\Omega}} g \, d\hat{\Omega} = \sum_{q=1}^{N_q}{\rho_q g(z_q)}.
 \end{equation}
+
+
 
 \subsection{Boundary conditions}
 As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions; $u(x,y) = 0, \forall (x,y) \in \partial \Omega$.
