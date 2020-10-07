@@ -57,6 +57,7 @@ class TestHomogeneousDirichlet(unittest.TestCase):
             rel_errors[i] = max_error
 
         rel_errors /= u_max
+        fig = plt.figure(figsize=plt.figaspect(1))
         plt.loglog(test_values, rel_errors, marker="o")
 
         plt.title("Convergence of relative error")
