@@ -44,10 +44,6 @@ class TestHomogeneousDirichlet(unittest.TestCase):
 
         rel_errors /= u_max
 
-        order = np.polyfit(np.log(test_values), np.log(rel_errors), 1)[0]
-        print("Order of convergence = ", order)
-        plt.loglog(test_values, rel_errors, marker="o")
-
         plt.title("Convergence of relative error")
         plt.ylabel("Relative error")
         plt.xlabel("$N$ nodes in mesh")
@@ -102,10 +98,6 @@ class TestSolverNeumann(unittest.TestCase):
             rel_errors[i] = max_error
 
         rel_errors /= u_max
-
-        order = np.polyfit(np.log(test_values), np.log(rel_errors), 1)[0]
-        print("Order of convergence = ", order)
-        plt.loglog(test_values, rel_errors, marker="o")
 
         plt.title("Convergence of relative error for partial Neumann")
         plt.ylabel("Relative error")
