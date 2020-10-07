@@ -25,7 +25,7 @@ def g(x):
 class TestSingularity(unittest.TestCase):
     def test_singularity(self):
         test_values = 2 ** np.arange(4, 13)
-        for i, N in enumerate(test_values):
+        for N in test_values:
             p, tri, edge = gd.GetDisc(N)
             A = get_A(p,tri,[],4,f)
             n = np.shape(A)[0]

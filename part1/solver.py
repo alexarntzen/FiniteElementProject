@@ -37,7 +37,7 @@ def solve(p, tri, dirichlet_edges, Nq, f, g=None, neumann_edges=np.empty(0)):
 
                 # finding A matrix
                 HaHb_derivative = lambda x: C[1, alpha] * C[1, beta] + C[2, alpha] * C[2, beta]
-                I_ab = qd.quadrature2D(p1, p2, p3, Nq, HaHb_derivative)
+                I_ab = qd.quadrature2D(p1, p2, p3, 1, HaHb_derivative)
                 A[element[alpha], element[beta]] += I_ab
 
                 # apply neumann conditions if applicable
@@ -87,7 +87,7 @@ def get_A(p, tri, dirichlet_edges, Nq, f, g=None, neumann_edges=np.empty(0)):
 
                 # finding A matrix
                 HaHb_derivative = lambda x: C[1, alpha] * C[1, beta] + C[2, alpha] * C[2, beta]
-                I_ab = qd.quadrature2D(p1, p2, p3, Nq, HaHb_derivative)
+                I_ab = qd.quadrature2D(p1, p2, p3, 1, HaHb_derivative)
                 A[element[alpha], element[beta]] += I_ab
 
                 # apply neumann conditions if applicable
