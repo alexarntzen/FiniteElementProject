@@ -3,9 +3,9 @@ import unittest
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
-
+from mpl_toolkits.mplot3d import Axes3D
 import test.getdisc as gd
-from part1.solver import solve
+from part1.solver import solve,get_A
 from test.plot_mesh import plot_disc
 
 
@@ -22,7 +22,19 @@ def g(x):
     return 4 * np.pi * np.linalg.norm(x) * np.cos(2 * np.pi * np.sum(x ** 2))
 
 
+class TestSingularity(unittest.TestCase):
+    def test_singularity(self):
+        test_values = 2 ** np.arange(4, 13)
+        for i, N in enumerate(test_values):
+            p, tri, edge = gd.GetDisc(N)
+            A = get_A(p,tri,[],4,f)
+            n = np.shape(A)[0]
+            rank = np.linalg.matrix_rank(A)
+            print("Rank of A: ", rank, ". Size of matrix A :(", n, " x ", n ,")" )
+            self.assertNotEqual(n,rank)
+
 class TestHomogeneousDirichlet(unittest.TestCase):
+    
     def test_compare_analytic(self):
         test_values = 2 ** np.arange(4, 13)
         rel_errors = np.zeros(len(test_values))
@@ -43,10 +55,6 @@ class TestHomogeneousDirichlet(unittest.TestCase):
             rel_errors[i] = max_error
 
         rel_errors /= u_max
-
-        order = np.polyfit(np.log(test_values), np.log(rel_errors), 1)[0]
-        print("Order of convergence = ", order)
-        plt.loglog(test_values, rel_errors, marker="o")
 
         plt.title("Convergence of relative error")
         plt.ylabel("Relative error")
@@ -102,10 +110,6 @@ class TestSolverNeumann(unittest.TestCase):
             rel_errors[i] = max_error
 
         rel_errors /= u_max
-
-        order = np.polyfit(np.log(test_values), np.log(rel_errors), 1)[0]
-        print("Order of convergence = ", order)
-        plt.loglog(test_values, rel_errors, marker="o")
 
         plt.title("Convergence of relative error for partial Neumann")
         plt.ylabel("Relative error")
