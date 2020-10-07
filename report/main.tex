@@ -173,7 +173,7 @@ As $r^2 = x^2 + y^2$ we find by comparison
 \end{equation*}
 The boundary conditions are then checked
 \begin{equation*}
-    \restr{u(x,y)}{\Omega} = \sin(2\pi) = 0,
+    \restr{u(x,y)}{\partial\Omega} = \sin(2\pi) = 0,
 \end{equation*}
 and we find that $u$ fulfills all the conditions. 
 \end{proof}
@@ -395,13 +395,8 @@ together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is locate
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Diskusjon}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Konklusjon}
-Lorem ipsum dolor \cite{dirac} sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\section{Conclusion}
+The finite difference method described compaires well with the analytic solution form Equation \eqref{analytical-solution}. For 1024 nodes, the maximal relative error is approximatley 2 \% for homogeneous Dirichlet boundary conditions, and approximatley 3 \% for mixed boundary conditions. In addition, the error decreases with as the number of nodes increases. This indicates that the method is convergent.
 	
 
 \bibliography{ref}
