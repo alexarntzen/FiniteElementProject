@@ -18,7 +18,7 @@
 
 \urlstyle{sf} % Velger hvilken stil url-adresser skrives, f.eks sf
 
-\usepackage{graphicx, subfig} % Brukes for å sette inn bilder eller figurer
+\usepackage{graphicx} % Brukes for å sette inn bilder eller figurer
 \usepackage{amsmath} 				% Ekstra matematikkfunksjoner.
 \usepackage{amssymb}
 \usepackage{amsfonts}
@@ -30,6 +30,7 @@
 \usepackage{bm}
 \usepackage{graphicx}
 \usepackage{changepage}
+\usepackage{subcaption}
 
 \usepackage{siunitx}					% Må inkluderes for blant annet å få tilgang til kommandoen \SI (korrekte måltall med enheter)
 	\sisetup{exponent-product = \cdot}      	% Prikk som multiplikasjonstegn (i steden for kryss).
@@ -56,11 +57,11 @@
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
 % Denne setter navnet på abstract til Sammendrag
-\renewenvironment{abstract}{\global\setbox\absbox=\vbox\bgroup
-\hsize=\textwidth\def\baselinestretch{1}%
-\noindent\unskip\textbf{Sammendrag}
-\par\medskip\noindent\unskip\ignorespaces}
-{\egroup}
+%\renewenvironment{abstract}{\global\setbox\absbox=\vbox\bgroup
+%\hsize=\textwidth\def\baselinestretch{1}%
+%\noindent\unskip\textbf{Sammendrag}
+%\par\medskip\noindent\unskip\ignorespaces}
+%{\egroup}
 
 %\clearpage % Bruk denne kommandoen dersom du vil ha ny side etter det er satt plass til figuren.
 % Disse kommandoene kan gjøre det enklere for LaTeX å plassere figurer og tabeller der du ønsker.
@@ -98,7 +99,9 @@
 
 
 \begin{abstract}
-The poisson problem with mixed homogenous Dirichlet and Neumann boundary conditions is solved numerically in two cases with a finite element metod. One case with homogeneous Dirichlet boundary conditions and one case with mixed Neumann and Dirichlet boundary conditions. The solutions are compaired to the analytic solution. The maximal error decreases with the number of degrees freedom and indicates that the metod is convergent. 
+The Poisson problem is solved numerically with a finite element metod in two cases with different boundary conditions.
+One case with homogeneous Dirichlet boundary conditions and one case with mixed Neumann and Dirichlet boundary conditions. 
+The solutions are compaired to the analytic solution. The maximal error decreases with the number of degrees freedom and indicates that the metod is convergent. 
 \end{abstract}
 
 \end{frontmatter}
@@ -106,14 +109,16 @@ The poisson problem with mixed homogenous Dirichlet and Neumann boundary conditi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-The poisson problem with mixed homogenous Dirichlet and Neumann boundary conditions is introduced together with an analytical solution. The weak formulation of this problem is then derived together with the Galerkin projection. The finite dimetional problem is then solved  numerically for two simple cases. The result is compaired to the corresponding analytic solution. 
+The Poisson problem with mixed homogenous Dirichlet and Neumann boundary conditions is introduced together with an analytical solution. 
+The weak formulation of this problem is then derived together with the Galerkin projection. 
+The finite dimetional problem is then solved numerically for two simple cases. The result is compared to the corresponding analytic solution. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Theory}
 
 \subsection{Problem}
 
-We consider the poisson problem with mixed homogenous Dirichlet and Neumann boundary conditions. 
+We consider the Poisson problem with mixed homogenous Dirichlet and Neumann boundary conditions. 
 
 \begin{equation}
 \begin{aligned}
@@ -156,12 +161,11 @@ By calculation
 
 \begin{equation*}
 \begin{aligned}
- u_{xx} &= 4\pi\cos(g(x,y)) - 16\pi^2x^2\sin(g(x,y))
+ u_{xx} &= 4\pi\cos(g(x,y)) - 16\pi^2x^2\sin(2\pi r^2)
 \\
-u_{yy} &= 4\pi\cos(g(x,y)) - 16\pi^2y^2\sin(g(x,y)),
+u_{yy} &= 4\pi\cos(g(x,y)) - 16\pi^2y^2\sin(2\pi r^2),
 \end{aligned}
 \end{equation*}
-where $ g(x,y) = 2\pi (x^2 + y^2)$. 
 As $r^2 = x^2 + y^2$ we find by comparison
 \begin{equation*}
 \begin{aligned}
@@ -174,9 +178,9 @@ The boundary conditions are then checked
 \begin{equation*}
     \restr{u(x,y)}{\partial\Omega} = \sin(2\pi) = 0,
 \end{equation*}
-and we find that $u$ fulfills all the conditions. 
+and we find that $u$ fulfills all the conditions given in \eqref{poission-problem}. 
 \end{proof}
-Then $u$ also reveals the corresponding solution with neumann bundary conditions. 
+\noindent Then $u$ also reveals the corresponding solution with neumann bundary conditions. 
 
 \begin{proposition}\label{analytical-solution-neumann}
 $u$ defined in \eqref{analytical-solution} satisfies \eqref{poission-problem} with $g$ given in polar coordinates as
@@ -214,7 +218,7 @@ $u$ defined in \eqref{analytical-solution} satisfies \eqref{poission-problem} wi
 \end{proposition}
 \begin{proof}
     This proof is heavely influenced by \cite[p. 44-45]{AQuart}.
-    Assume $u$ satisfies \eqref{poission-problem}. Then mulitplying by a test function $v$ and integration over $\Omega$ results in the folloiwng integral equation
+    Assume $u$ satisfies \eqref{poission-problem}. Then mulitplying by a test function $v$ and integration over $\Omega$ results in the following integral equation
     \begin{equation}
         \label{weak-start}
         \begin{aligned}
@@ -251,7 +255,7 @@ $u$ defined in \eqref{analytical-solution} satisfies \eqref{poission-problem} wi
 \subsection{Galerkin projection}
 
 We now search for solutions in the finite subspace $X_h \subset X$. 
-By discretizing $\Omega$ into $M$ triangles $K_k$ defined by corner nodes $x_i$, we have basis functions corresponding to each node.
+By discretizing $\Omega$ into $M$ triangles $K_k$, , as seen in figure \ref{plot-mehses}, defined by corner nodes $(x_i,y_i)$, we have basis functions corresponding to each node.
 Let 
 \begin{equation*}
 X_h = \{ v \in X : v|_{K_k} \in \mathbb{P}_1 (K_k),1\leq k\leq M \},
@@ -260,7 +264,7 @@ and $\{\phi_i\}_{i=1}^n$ be the basis functions of $X_h$ such that
 
 \begin{equation*}
     \begin{aligned}
-X_h = \text{span} \{\phi_i\}_{i=1}^n & & \phi_j(x_i) = \delta_{ij}.
+X_h = \text{span} \{\phi_i\}_{i=1}^n & & \phi_j(x_i,y_i) = \delta_{ij}.
     \end{aligned}
 \end{equation*}
 Hence we aim to find $u_h \in X_h$ $\forall v \in X_h$, meaning we can write
@@ -304,7 +308,7 @@ With $\bm A, \bm u, \bm f$ given by
 \begin{remark}
 Note that in equation \eqref{weak_formulation_matrix} $\bm A$ is singular. 
 This is a consequence of the fact that no boundary conditions has yet been enforced on the systems of equations.
-The poisson problem stated in \eqref{poission-problem} will have infinitely many solutions $u$ when boundary conditions are not considered \cite[p. 39]{AQuart}.
+The Poisson problem stated in \eqref{poission-problem} will have infinitely many solutions $u$ when boundary conditions are not considered \cite[p. 39]{AQuart}.
 The same is then true for the solution of the discretized problem $\bm u$ and hence it follows that $\bm A$ is singular.
 This is verified numerically by finding that $\text{rank}(\bm A) < n, \bm A \in \mathbb{R}^{n \times n}$.
 \end{remark}
@@ -319,11 +323,11 @@ To evaluate the integrals in the weak formulation gaussian quadrature is used. T
 
 
 \subsection{Boundary conditions}
-As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions; $u(x,y) = 0, \forall (x,y) \in \partial \Omega$.
+As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on parts of the domain; $u(x,y) = 0, \forall (x,y) \in \partial \Omega_D$.
 This has not been considered in the given construction of $\bm A,\bm f$, which could be denoted as a proto problem.
-Hence, to find the solution $u \in X_h$ we will use the so called Big Number approach to enforce the boundary conditions.
+Hence, to find the solution $u \in X_h$ we will use the so called Big Number approach to enforce the Dirichlet boundary conditions.
 
-For nodes on the boundary $(x_i,y_i), i=n,\cdots\tilde n$ we set
+For nodes on the boundary $(x_i,y_i), i=n+1,\cdots\tilde n$ we set
 
 \begin{equation*}
     \begin{aligned}
@@ -348,45 +352,90 @@ Given the number of nodes $N$ on the domain, we generate a regular mesh $(x_i,y_
 Examples of such a mesh for $N = 16,64,256$ could be seen in figure \ref{plot-meshes}.
 
 \subsection{Homogeneous Dirichlet boundary conditions}
-The finite element method described is tested on the Poisson problem with homogeneous Dirichlet conditions and $f$ given by Equation \eqref{f-analytic}. By Proposition \ref{prop-analytical-solution} the solution is known and is used as a reference. Numerical experiments with increasing degrees of freedom results in lower relative maximal error, as seen in figure \ref{convergence}. The numerical solution for $N = 1024$ nodes is plotted in figure \ref{solution-error}
+The finite element method described is tested on the Poisson problem with homogeneous Dirichlet conditions and $f$ given by Equation \eqref{f-analytic}. 
+By Proposition \ref{prop-analytical-solution} the solution is known and is used as a reference. 
+Numerical experiments with increasing degrees of freedom results in lower relative maximal error, as seen in figure \ref{convergence}. The numerical solution for $N = 1024$ nodes is plotted in figure \ref{solution-error}
 together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is located on our domain $\Omega$. 
 
-\begin{figure}[ht]
-    \centering
-        \includegraphics[scale=0.5]{figures/plot_homogeneous_dirichlet.pdf}
-    \caption{The poission problem with homogeneous Dirichlet conditions solved on a disc mesh with $N = 1024$ nodes.
-    The top plot displays the numerical solution from the Galerkin projection,
-    while the bottom Figure displays the error in the nodal points.}
-    \label{solution-error}
-\end{figure}
-
-\begin{figure}[tbp]
-    \centering
-        \includegraphics[scale=0.5]{figures/convergence_homogeneous_dirichlet.pdf}
-    \caption{Relative error when solving for multiple mesh discs with the number of nodes given by $N_n = \{ 2^n\}_{n=4}^{12}$
-    where $N_{min} = 16$ and $N_{max} = 4096$.}
-    \label{convergence}
-\end{figure}
 \subsection{Mixed boundary conditions}
 The finite element method is used to solve the Poisson problem given by \eqref{poission-problem} with $f$ given by Equation \eqref{f-analytic}, $g$ given by Equation \eqref{g-analytic} and $\partial \Omega_N = \{ x,y \in \partial \Omega : y> 0\}$. By Proposition \ref{analytical-solution-neumann} the solution is the is the same as for Homogeneous Dirichlet boundary conditions. Numerical experiments with increasing degrees of freedom results in lower relative maximal error, as seen in Figure \ref{convergence}. The numerical solution for $N = 1024$ nodes is plotted in Figure \ref{solution-error}
 together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is located on our domain $\Omega$. 
 
-\begin{figure}[ht]
-    \centering
-        \includegraphics[scale=0.7]{figures/plot_mixed_neumann.pdf}
-    \caption{The poission problem with mixed boundary conditions solved on a disc mesh with $N = 1024$ nodes.
-    The top plot displays the numerical solution from the Galerkin projection,
-    while the bottom figure displays the error in the nodal points.}
-    \label{solution-error-neumann}
-\end{figure}
+\begin{figure*}
+    \begin{center}
+    \textbf{Figure }\par\medskip
+    \end{center}
 
-\begin{figure}[tbp]
-    \centering
-        \includegraphics[scale=0.5]{figures/convergence_mixed_neumann.pdf}
-    \caption{Relative error of numerical solutios to the poission problem with mixed boundary conditions for multiple mesh discs. The number of nodes given by $N_n = \{ 2^n\}_{n=4}^{12}$
-    where $N_{min} = 16$ and $N_{max} = 4096$.}
-    \label{convergence-neumann}
-\end{figure}
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+            \includegraphics[scale=0.5]{figures/plot_homogeneous_dirichlet.pdf}
+        \caption{The poission problem with homogeneous Dirichlet conditions solved on a disc mesh with $N = 1024$ nodes.
+        The top plot displays the numerical solution from the Galerkin projection,
+        while the bottom Figure displays the error in the nodal points.}
+        \label{solution-error}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+            \includegraphics[scale=0.5]{figures/plot_homogeneous_dirichlet.pdf}
+        \caption{The poission problem with homogeneous Dirichlet conditions solved on a disc mesh with $N = 1024$ nodes.
+        The top plot displays the numerical solution from the Galerkin projection,
+        while the bottom Figure displays the error in the nodal points.}
+        \label{solution-error}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+            \includegraphics[scale=0.5]{figures/convergence_homogeneous_dirichlet.pdf}
+        \caption{Relative error of numerical solutios to the poission problem with Dirichlet boundary conditions for multiple mesh discs. The number of nodes given by $N_n = \{ 2^n\}_{n=4}^{12}$
+        where $N_{min} = 16$ and $N_{max} = 4096$.}
+        \label{convergence}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+            \includegraphics[scale=0.5]{figures/convergence_mixed_neumann.pdf}
+        \caption{Relative error of numerical solutios to the poission problem with mixed boundary conditions for multiple mesh discs. The number of nodes given by $N_n = \{ 2^n\}_{n=4}^{12}$
+        where $N_{min} = 16$ and $N_{max} = 4096$.}
+        \label{convergence-neumann}
+    \end{subfigure}
+    \label{all_plots}
+\end{figure*}
+
+% \begin{figure}[ht]
+%     \centering
+%         \includegraphics[scale=0.5]{figures/plot_homogeneous_dirichlet.pdf}
+%     \caption{The poission problem with homogeneous Dirichlet conditions solved on a disc mesh with $N = 1024$ nodes.
+%     The top plot displays the numerical solution from the Galerkin projection,
+%     while the bottom Figure displays the error in the nodal points.}
+%     \label{solution-error}
+% \end{figure}
+
+% \begin{figure}[tbp]
+%     \centering
+%         \includegraphics[scale=0.5]{figures/convergence_homogeneous_dirichlet.pdf}
+%     \caption{Relative error when solving for multiple mesh discs with the number of nodes given by $N_n = \{ 2^n\}_{n=4}^{12}$
+%     where $N_{min} = 16$ and $N_{max} = 4096$.}
+%     \label{convergence}
+% \end{figure}
+
+
+% \begin{figure}[ht]
+%     \centering
+%         \includegraphics[scale=0.7]{figures/plot_mixed_neumann.pdf}
+%     \caption{The poission problem with mixed boundary conditions solved on a disc mesh with $N = 1024$ nodes.
+%     The top plot displays the numerical solution from the Galerkin projection,
+%     while the bottom figure displays the error in the nodal points.}
+%     \label{solution-error-neumann}
+% \end{figure}
+
+% \begin{figure}[tbp]
+%     \centering
+%         \includegraphics[scale=0.5]{figures/convergence_mixed_neumann.pdf}
+%     \caption{Relative error of numerical solutios to the poission problem with mixed boundary conditions for multiple mesh discs. The number of nodes given by $N_n = \{ 2^n\}_{n=4}^{12}$
+%     where $N_{min} = 16$ and $N_{max} = 4096$.}
+%     \label{convergence-neumann}
+% \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

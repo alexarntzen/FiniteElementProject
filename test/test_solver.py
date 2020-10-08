@@ -3,7 +3,7 @@ import unittest
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
-
+from mpl_toolkits.mplot3d import Axes3D
 import test.getdisc as gd
 from part1.solver import solve, get_A_F
 
@@ -60,7 +60,7 @@ class TestHomogeneousDirichlet(unittest.TestCase):
         fig = plt.figure(figsize=plt.figaspect(1))
         plt.loglog(test_values, rel_errors, marker="o")
 
-        plt.title("Convergence of relative error")
+        plt.title("Convergence of relative error for Dirichlet")
         plt.ylabel("Relative error")
         plt.xlabel("$N$ nodes in mesh")
         plt.savefig("figures/convergence_homogeneous_dirichlet.pdf")
@@ -74,7 +74,7 @@ class TestHomogeneousDirichlet(unittest.TestCase):
         p, tri, edge = gd.GetDisc(N)
         U = solve(p, tri, edge, 4, f)
         ax = fig.add_subplot(2, 1, 1, projection='3d')
-        ax.set_title("Numerical solution")
+        ax.set_title("Numerical solution for Dirichlet")
         ax.set_zlabel("$U_{i,j}$")
         ax.plot_trisurf(p[:, 0], p[:, 1], U, cmap=cm.viridis)
 
