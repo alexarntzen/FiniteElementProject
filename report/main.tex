@@ -352,6 +352,9 @@ which for a sufficiently small $\epsilon$ enforces the boundary conditions.
     \label{plot-mehses}
 \end{figure}
 
+Given the number of nodes $N$ on the domain, we generate a regular mesh $(x_i,y_i) \in \Omega, i = 1,\cdots,N$.
+Examples of such a mesh for $N = 16,64,256$ could be seen in figure \ref{plot-meshes}.
+
 \subsection{Homogeneous Dirichlet boundary conditions}
 The finite element method described is tested on the Poisson problem with homogeneous Dirichlet conditions and $f$ given by Equation \eqref{f-analytic}. By Proposition \ref{prop-analytical-solution} the solution is known and is used as a reference. Numerical experiments with increasing degrees of freedom results in lower relative maximal error, as seen in figure \ref{convergence}. The numerical solution for $N = 1024$ nodes is plotted in figure \ref{solution-error}
 together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is located on our domain $\Omega$. 
