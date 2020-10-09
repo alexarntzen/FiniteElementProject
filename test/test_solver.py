@@ -23,7 +23,7 @@ def g(x):
 
 class TestSingularity(unittest.TestCase):
     def test_singularity(self):
-        test_values = 2 ** np.arange(4, 13)
+        test_values = 2 ** np.arange(4, 11)
         print("\n\n\Checking matrix is singular before applying boundary conditions")
         for N in test_values:
             p, tri, edge = gd.GetDisc(N)
@@ -37,7 +37,7 @@ class TestSingularity(unittest.TestCase):
 class TestHomogeneousDirichlet(unittest.TestCase):
 
     def test_compare_analytic(self):
-        test_values = 2 ** np.arange(4, 13)
+        test_values = 2 ** np.arange(4, 11)
         rel_errors = np.zeros(len(test_values))
         u_max = 1
         print("\n\nComparing homogeneous dirichlet to analytical result")
