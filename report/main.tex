@@ -142,7 +142,7 @@ Note that when $\partial \Omega_{D} = \partial \Omega$ we have the homogenous Di
 
 
 \subsection{Analytical solution}
-We consider an analytical solution $u$
+We consider an analytical solution to the Poission problem \eqref{poission-problem} $u$
 \begin{proposition}\label{prop-analytical-solution}
     $u: \mathbb{R}^2 \rightarrow \mathbb{R}$ such that
 
@@ -181,7 +181,7 @@ The boundary conditions are then checked
 \end{equation*}
 and we find that $u$ fulfills all the conditions given in \eqref{poission-problem}. 
 \end{proof}
-\noindent Then $u$ also reveals the corresponding solution with Neumann bundary conditions. 
+\noindent Then $u$ also hold for the corresponding solution with Neumann bundary conditions. 
 
 \begin{proposition}\label{analytical-solution-neumann}
 $u$ defined in Equation \eqref{analytical-solution} satisfies Equation \eqref{poission-problem} with $g$ given in polar coordinates as
@@ -204,9 +204,13 @@ $u$ defined in Equation \eqref{analytical-solution} satisfies Equation \eqref{po
 \subsection{Weak formulation}
 
 \begin{proposition}
-    The weak formulation of \eqref{poission-problem} with homogeneous dirichlet boundary conditions is given by: find 
+    The weak formulation of \eqref{poission-problem} with homogeneous dirichlet boundary conditions is given by:  
     \begin{equation*}
-        u \in H_0^{1}(\Omega) : a(u,v) = l(v) \ \forall v \in H_0^{1}(\Omega), 
+        \begin{aligned}
+        &\text{find } u \in H_0^{1}(\Omega) : 
+        \\
+        &a(u,v) = l(v) \ \forall v \in H_0^{1}(\Omega), 
+        \end{aligned}
     \end{equation*}
     where $a$ is the bilinear functional and $l$ the linear functional defined as 
     \begin{equation*}
@@ -238,16 +242,14 @@ $u$ defined in Equation \eqref{analytical-solution} satisfies Equation \eqref{po
         \iint\limits_{\Omega} fv \, dx \, dy.
     \end{equation}
     
-    Since $v$ was arbitrary the weak formulation follows. Furthermore, all $u$ and $v$ must belong to a space such that $\nabla u \cdot \nabla v \in {L^1}(\Omega)$, where the derivatives are of the weak form. Then $\nabla u$ and $\nabla v$ must be in ${L^2}(\Omega)$, while $u$ and $v$ must be in ${H^1_0}(\Omega)$.
-    
-    Finally, linearity and bilinearity of $l$ and $a$ follows directly from linearity of the weak derivative and the integral.
+    Since $v$ was arbitrary the weak formulation follows. Furthermore, all $u$ and $v$ must belong to a space such that $\nabla u \cdot \nabla v \in {L^1}(\Omega)$, where the derivatives are of the weak form. Then $\nabla u$ and $\nabla v$ must be in ${L^2}(\Omega)$, while $u$ and $v$ must be in ${H^1_0}(\Omega)$. Finally, linearity and bilinearity of $l$ and $a$ follows directly from linearity of the weak derivative and the integral.
 \end{proof}
 \begin{remark}
     When Neumann boundary conditions are considered we have to change the space of test functions to 
     \begin{equation}
         H^1_{\partial \Omega_D } = \{v \in H^1(\Omega):\restr{v}{\partial \Omega_D }=0 \}.
     \end{equation}
-    This changes $a$ and $l$, as they now operate on a new funciton space. In addition the expression for $l$ changes to
+    This changes $a$ and $l$, as they now operate on a new function space. In addition the expression for $l$ changes to
     \begin{equation}
         l(v) = \int_{\partial \Omega_N} \frac{\partial u}{\partial n} v \, d\gamma + \iint\limits_{\Omega} f v  \, dx \, dy.
         \label{neumann-conditions}
@@ -323,7 +325,7 @@ To evaluate the integrals in the weak formulation gaussian quadrature is used. T
 \end{equation}
 
 \subsection{Boundary conditions}
-As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on parts of the domain; $\restr{u}{\partial \Omega_D} =  0 $. This has not been considered in the given construction of $\bm A,\bm f$, which could be denoted as a proto problem. Hence, to find the solution $u \in X_h$ we will use the so called Big Number approach to enforce the Dirichlet boundary conditions. For nodes on the boundary $(x_i,y_i), i=n+1,\cdots\tilde n$ we set. 
+As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on parts of the domain; $\restr{u}{\partial \Omega_D} =  0 $. This has not been considered in the given construction of $\bm A,\bm f$, which could be denoted as a proto problem. Hence, to find the solution $u \in X_h$ we will use the so called Big Number approach \cite[p. 16]{Lecture_Note_4} to enforce the Dirichlet boundary conditions. For nodes on the boundary $(x_i,y_i), i=n+1,\cdots\tilde n$ we set. 
 
 
 \begin{equation*}
@@ -353,7 +355,12 @@ Examples of such  meshes for $N = 16,64,256$ are shown in Figure \ref{plot-meshe
 The finite element method described is tested on the Poisson problem with homogeneous Dirichlet conditions and $f$ given by Equation \eqref{f-analytic}. 
 By Proposition \ref{prop-analytical-solution} the solution is known and is used as a reference. 
 Numerical experiments with increasing degrees of freedom results in lower relative maximal error, as seen in Figure \ref{convergence-dirichlet}. The numerical solution for $N = 1024$ nodes is shown in Figure \ref{solution-error-dirichlet}
-together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is located on our domain $\Omega$. 
+together with a plot of how the error $e_{i} = U_{i} - u(x_i,y_i)$ is located on our domain $\Omega$. 
+The relative maximal error is given by
+
+\begin{equation*}
+    e_{rel,max} = \max_{1\leq i \leq n} \frac{|e_i|}{\| u(x,y)\|_{\infty}} = \max_{1\leq i \leq n} |e_i|.
+\end{equation*}
 
 \begin{figure}[t]
     \begin{subfigure}[b]{0.5\textwidth}
@@ -396,7 +403,7 @@ The finite element method is used to solve the Poisson problem given by \eqref{p
 \end{figure}
    
 \section{Conclusion}
-The finite difference method described compares well with the analytic solution from Equation \eqref{analytical-solution}. For 1024 nodes, the maximal relative error is approximately 2 \% for homogeneous Dirichlet boundary conditions, and approximately 3 \% for mixed boundary conditions. In addition, the error decreases with  the number of nodes increases. This indicates that the method is convergent.
+The finite difference method described compares well with the analytic solution from Equation \eqref{analytical-solution}. For 1024 nodes, the maximal relative error is approximately $e_{rel,max} \approx 0.02$ for homogeneous Dirichlet boundary conditions, and approximately $e_{rel,max} \approx 0.03$ for mixed boundary conditions. In addition, the error decreases with  the number of nodes increases. This indicates that the method is convergent.
 	
 
 \bibliography{ref}
