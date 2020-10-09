@@ -257,7 +257,7 @@ $u$ defined in Equation \eqref{analytical-solution} satisfies Equation \eqref{po
 \subsection{Galerkin projection}
 
 We now search for solutions in the finite subspace $X_h \subset X$. 
-By discretizing $\Omega$ into $M$ triangles $K_k$, , as seen in Figure \ref{plot-mehses}, defined by corner nodes $(x_i,y_i)$, we have basis functions corresponding to each node.
+By discretizing $\Omega$ into $M$ triangles $K_k$, as seen in Figure \ref{plot-meshes}, defined by corner nodes $(x_i,y_i)$, we have basis functions corresponding to each node.
 Let 
 \begin{equation*}
 X_h = \{ v \in X : v|_{K_k} \in \mathbb{P}_1 (K_k),1\leq k\leq M \},
@@ -346,7 +346,7 @@ Examples of such  meshes for $N = 16,64,256$ are shown in Figure \ref{plot-meshe
 
 \begin{figure}[t]
     \centering
-        \includegraphics[width=0.5\textwidth]{figures/plot_meshes.pdf}
+        \includegraphics[width=\textwidth]{figures/plot_meshes.pdf}
     \caption{The generated mesh for  16, 64 and 256 nodes. }
     \label{plot-meshes}
 \end{figure}

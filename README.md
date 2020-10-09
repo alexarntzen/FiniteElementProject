@@ -15,10 +15,10 @@ python3 -m unittest
 ```
 from in the top level directory. 
 
-Alternatively  append `test.test_quadrature.TestQuadratureMethods`, `test.test_solver.TestHomogeneousDirichlet`  
+Alternatively  append `test.test_quadrature.TestQuadratureMethods`, `test.test_solver.TestHomogeneousDirichlet`,  `test.test_meshing.TestMeshing`
 or `test.test_solver.TestSolverNeumann` to run the test corresponding to each task. 
 For example: 
 ```
 python3 -m unittest test.test_quadrature.TestQuadratureMethods
 ```
- 
+Then the figures will be generated into the `figures/` directory 
