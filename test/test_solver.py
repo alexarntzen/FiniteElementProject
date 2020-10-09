@@ -60,7 +60,7 @@ class TestHomogeneousDirichlet(unittest.TestCase):
         fig = plt.figure(figsize=plt.figaspect(1))
         plt.loglog(test_values, rel_errors, marker="o")
 
-        plt.title("Convergence of relative error for Dirichlet")
+        # plt.title("Convergence of relative error for Dirichlet")
         plt.ylabel("Relative error")
         plt.xlabel("$N$ nodes in mesh")
         plt.savefig("figures/convergence_homogeneous_dirichlet.pdf")
@@ -74,7 +74,7 @@ class TestHomogeneousDirichlet(unittest.TestCase):
         p, tri, edge = gd.GetDisc(N)
         U = solve(p, tri, edge, 4, f)
         ax = fig.add_subplot(2, 1, 1, projection='3d')
-        ax.set_title("Numerical solution for Dirichlet")
+        # ax.set_title("Numerical solution for Dirichlet")
         ax.set_zlabel("$U_{i,j}$")
         ax.plot_trisurf(p[:, 0], p[:, 1], U, cmap=cm.viridis)
 
@@ -84,7 +84,7 @@ class TestHomogeneousDirichlet(unittest.TestCase):
         # ax.plot_trisurf(p[:,0],p[:,1],u(p.T),cmap=cm.viridis)
 
         ax2 = fig.add_subplot(2, 1, 2, projection='3d')
-        ax2.set_title("Error")
+        # ax2.set_title("Error")
         ax2.set_zlabel("$U_{i,j} - u(x_i,y_j)$")
         ax2.plot_trisurf(p[:, 0], p[:, 1], U - u(p.T), cmap=cm.viridis)
         # ax.plot_trisurf(p[:, 0], p[:, 1], U)
@@ -118,7 +118,7 @@ class TestSolverNeumann(unittest.TestCase):
 
         fig = plt.figure(figsize=plt.figaspect(1))
         plt.loglog(test_values, rel_errors, marker="o")
-        plt.title("Convergence of relative error for partial Neumann")
+        # plt.title("Convergence of relative error for partial Neumann")
         plt.ylabel("Relative error")
         plt.xlabel("$N$ nodes in mesh")
         plt.savefig("figures/convergence_mixed_neumann.pdf")
@@ -136,7 +136,7 @@ class TestSolverNeumann(unittest.TestCase):
         U = solve(p, tri, dirichlet_edges, 4, f, g, neumann_edges)
 
         ax = fig.add_subplot(2, 1, 1, projection='3d')
-        ax.set_title("Numerical solution for mixed Neumann")
+        # ax.set_title("Numerical solution for mixed Neumann")
         ax.set_zlabel("$U_{i,j}$")
         ax.plot_trisurf(p[:, 0], p[:, 1], U, cmap=cm.viridis)
 
@@ -146,7 +146,7 @@ class TestSolverNeumann(unittest.TestCase):
         # ax.plot_trisurf(p[:,0],p[:,1],u(p.T),cmap=cm.viridis)
 
         ax2 = fig.add_subplot(2, 1, 2, projection='3d')
-        ax2.set_title("Error")
+        # ax2.set_title("Error")
         ax2.set_zlabel("$U_{i,j} - u(x_i,y_j)$")
         ax2.plot_trisurf(p[:, 0], p[:, 1], U - u(p.T), cmap=cm.viridis)
         # ax.plot_trisurf(p[:, 0], p[:, 1], U)
