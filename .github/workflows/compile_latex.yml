@@ -36,9 +36,9 @@ jobs:
       - name: Compile LaTeX document
         uses: dante-ev/latex-action@v0.2.0
         with:
-          working-directory: report 
+          working_directory: report 
           root_file: main.tex
       - uses: actions/upload-artifact@v2
         with:
           name: compiled_document.pdf
-          path: main.pdf
+          path: report/main.pdf
