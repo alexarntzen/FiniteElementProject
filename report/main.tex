@@ -222,7 +222,7 @@ $u$ defined in Equation \eqref{analytical-solution} satisfies Equation \eqref{po
     \end{equation*}
 \end{proposition}
 \begin{proof}
-    This proof is heavily influenced by \cite[p. 44-45]{AQuart}.
+    This proof is heavily influenced by Quarteroni\cite[p. 44-45]{AQuart}.
     Assume $u$ satisfies \eqref{poission-problem}. Then mulitplying by a test function $v$ and integration over $\Omega$ results in the following integral equation
     \begin{equation}
         \label{weak-start}
@@ -344,25 +344,14 @@ Given the number of nodes $N$ on the domain, we generate a regular mesh $(x_i,y_
 Examples of such  meshes for $N = 16,64,256$ are shown in Figure \ref{plot-meshes}.
 
 
-\begin{figure}[t]
+\begin{figure}[b]
     \centering
         \includegraphics[width=\textwidth]{figures/plot_meshes.pdf}
     \caption{The generated mesh for  16, 64 and 256 nodes. }
     \label{plot-meshes}
 \end{figure}
 
-\subsection{Homogeneous Dirichlet boundary conditions}
-The finite element method described is tested on the Poisson problem with homogeneous Dirichlet conditions and $f$ given by Equation \eqref{f-analytic}. 
-By Proposition \ref{prop-analytical-solution} the solution is known and is used as a reference. 
-Numerical experiments with increasing degrees of freedom results in lower relative maximal error, as seen in Figure \ref{convergence-dirichlet}. The numerical solution for $N = 1024$ nodes is shown in Figure \ref{solution-error-dirichlet}
-together with a plot of how the error $e_{i} = U_{i} - u(x_i,y_i)$ is located on our domain $\Omega$. 
-The relative maximal error is given by
-
-\begin{equation*}
-    e_{rel,max} = \max_{1\leq i \leq n} \frac{|e_i|}{\| u(x,y)\|_{\infty}} = \max_{1\leq i \leq n} |e_i|.
-\end{equation*}
-
-\begin{figure}[t]
+\begin{figure}[ht]
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
             \includegraphics[width=\linewidth]{figures/plot_homogeneous_dirichlet.pdf}
@@ -380,7 +369,17 @@ The relative maximal error is given by
     The top plot displays the numerical solution from the Galerkin projection,
     while the bottom figure displays the error in the nodal points.}
 \end{figure}
-\FloatBarrier
+\subsection{Homogeneous Dirichlet boundary conditions}
+The finite element method described is tested on the Poisson problem with homogeneous Dirichlet conditions and $f$ given by Equation \eqref{f-analytic}. 
+By Proposition \ref{prop-analytical-solution} the solution is known and is used as a reference. 
+Numerical experiments with increasing degrees of freedom results in lower relative maximal error, as seen in Figure \ref{convergence-dirichlet}. The numerical solution for $N = 1024$ nodes is shown in Figure \ref{solution-error-dirichlet}
+together with a plot of how the error $e_{i} = U_{i} - u(x_i,y_i)$ is located on our domain $\Omega$. 
+The relative maximal error is given by
+
+\begin{equation*}
+    e_{rel,max} = \max_{1\leq i \leq n} \frac{|e_i|}{\| u(x,y)\|_{\infty}} = \max_{1\leq i \leq n} |e_i|.
+\end{equation*}
+
 \subsection{Mixed boundary conditions}
 The finite element method is used to solve the Poisson problem given by \eqref{poission-problem} with $f$ given by Equation \eqref{f-analytic}, $g$ given by Equation \eqref{g-analytic} and $\partial \Omega_N = \{ x,y \in \partial \Omega : y> 0\}$. By Proposition \ref{analytical-solution-neumann} the solution is the is the same as for Homogeneous Dirichlet boundary conditions. Numerical experiments with increasing degrees of freedom results in lower relative maximal error, as seen in Figure \ref{convergence-neumann}. The numerical solution for $N = 1024$ nodes is plotted in Figure \ref{solution-error-mixed} together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is located on our domain $\Omega$. 
 
