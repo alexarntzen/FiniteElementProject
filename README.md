@@ -16,7 +16,7 @@ python3 -m unittest
 from in the top level directory. 
 
 Alternatively  append `test.test_quadrature.TestQuadratureMethods`, `test.test_solver.TestHomogeneousDirichlet`,  `test.test_meshing.TestMeshing`
-or `test.test_solver.TestSolverNeumann` to run the test corresponding to each task. 
+or `test.test_solver.TestSolverNeumann` to run the test corresponding to each task. These test will compare the numerical solutions with the analytical solution as required by the project description. 
 For example: 
 ```
 python3 -m unittest test.test_quadrature.TestQuadratureMethods

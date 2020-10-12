@@ -20,7 +20,7 @@ def f(x):
 def g(x):
     return 4 * np.pi * np.linalg.norm(x) * np.cos(2 * np.pi * np.sum(x ** 2))
 
-
+# Test that the proto problem matrix is singular. 
 class TestSingularity(unittest.TestCase):
     def test_singularity(self):
         test_values = 2 ** np.arange(4, 11)
@@ -33,7 +33,7 @@ class TestSingularity(unittest.TestCase):
             print("Rank of A: ", rank, ". Size of matrix A :(", n, " x ", n, ")")
             self.assertNotEqual(n, rank)
 
-
+# Test the solver on the problem from task 2 
 class TestHomogeneousDirichlet(unittest.TestCase):
 
     def test_compare_analytic(self):
@@ -91,7 +91,7 @@ class TestHomogeneousDirichlet(unittest.TestCase):
         plt.savefig("figures/plot_homogeneous_dirichlet.pdf")
         plt.clf()
 
-
+# Test the solver on the problem from task 3
 class TestSolverNeumann(unittest.TestCase):
     def test_compare_analytic(self):
         test_values = 2 ** np.arange(4, 12)
