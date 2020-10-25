@@ -4,7 +4,7 @@
 \usepackage[utf8]{inputenc} %- Løser problem med å skrive andre enn engelske bokstaver f.eks æ,ø,å.
 
 \usepackage[T1]{fontenc} %- Støtter koding av forskjellige fonter.
-
+\usepackage{lmodern}
 \usepackage{textcomp} % Støtter bruk av forskjellige fonter som dollartegn, copyright, en kvart, en halv mm, se http://gcp.fcaglp.unlp.edu.ar/_media/integrantes:psantamaria:latex:textcomp.pdf
 
 \usepackage{url} % Gjør internett- og e-mail adresser klikkbare i tex-dokumentet.
@@ -32,6 +32,8 @@
 \usepackage{changepage}
 \usepackage{subcaption}
 \usepackage{placeins}
+\usepackage{bm}
+\usepackage{physics}
 
 
 \usepackage{siunitx}					% Må inkluderes for blant annet å få tilgang til kommandoen \SI (korrekte måltall med enheter)
@@ -56,7 +58,9 @@
 
 % math stuff
 \newcommand{\restr}[2]{\ensuremath{\left.#1\right|_{#2}}}
-\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+% my personal commands
+\newcommand{\R}{\mathbb{R}}
 
 % Denne setter navnet på abstract til Sammendrag
 %\renewenvironment{abstract}{\global\setbox\absbox=\vbox\bgroup
@@ -230,7 +234,7 @@ $u$ defined in Equation \eqref{analytical-solution} satisfies Equation \eqref{po
             \iint\limits_{\Omega} \nabla^2uv \, dx \, dy &=  -\iint\limits_{\Omega} fv \, dx \, dy.\ 
         \end{aligned}
     \end{equation}
-    Applying Green's first dentity and the fact that $\frac{\partial u}{\partial n} = 0$ on $\partial \Omega$ gives
+    Applying Green's first identity and the fact that $\frac{\partial u}{\partial n} = 0$ on $\partial \Omega$ gives
     \begin{equation}
         \iint\limits_{\Omega} \nabla^2 u v \, dx \, dy 
         = \underbrace{\int_{\partial \Omega} \frac{\partial u}{\partial n} v \, d\gamma}_{=0} - \iint\limits_{\Omega} \nabla u \cdot \nabla v  \, dx \, dy,
@@ -242,7 +246,7 @@ $u$ defined in Equation \eqref{analytical-solution} satisfies Equation \eqref{po
         \iint\limits_{\Omega} fv \, dx \, dy.
     \end{equation}
     
-    Since $v$ was arbitrary the weak formulation follows. Furthermore, all $u$ and $v$ must belong to a space such that $\nabla u \cdot \nabla v \in {L^1}(\Omega)$, where the derivatives are of the weak form. Then $\nabla u$ and $\nabla v$ must be in ${L^2}(\Omega)$, while $u$ and $v$ must be in ${H^1_0}(\Omega)$. Finally, linearity and bilinearity of $l$ and $a$ follows directly from linearity of the weak derivative and the integral.
+    Since $v$ was arbitrary the weak formulation follows. Furthermore, all $u$ and $v$ must belong to a space such that $\nabla u \cdot \nabla v \in {L^1}(\Omega)$, where the derivatives are of the weak form. Then $\nabla u$ and $\nabla v$ must be in $\left[{L^2}(\Omega)\right]^2$, while $u$ and $v$ must be in ${H^1_0}(\Omega)$. Finally, linearity and bilinearity of $l$ and $a$ follows directly from linearity of the weak derivative and the integral.
 \end{proof}
 \begin{remark}
     When Neumann boundary conditions are considered we have to change the space of test functions to 
@@ -323,6 +327,7 @@ To evaluate the integrals in the weak formulation gaussian quadrature is used. T
 \begin{equation}
     \int_{\hat{\Omega}} g \, d\hat{\Omega} = \sum_{q=1}^{N_q}{\rho_q g(z_q)}.
 \end{equation}
+% TODO : Her må det skrives mer. 
 
 \subsection{Boundary conditions}
 As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on parts of the domain; $\restr{u}{\partial \Omega_D} =  0 $. This has not been considered in the given construction of $\bm A,\bm f$, which could be denoted as a proto problem. Hence, to find the solution $u \in X_h$ we will use the so called Big Number approach \cite[p. 16]{Lecture_Note_4} to enforce the Dirichlet boundary conditions. For nodes on the boundary $(x_i,y_i), i=n+1,\cdots\tilde n$ we set. 
@@ -337,6 +342,99 @@ As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on
 which for a sufficiently small $\epsilon$ enforces the boundary conditions. In this way Dirichlet boundary conditions are enforced essentialy by restricting the function space. 
 
 Neumann boundary conditions are enforced in a natrual way by adding a term to $l$ as in Equation \eqref{neumann-conditions}.
+
+\section{Elasticity }
+\subsection{The elasticity equation}
+Let $\boldsymbol{u} : \Omega \rightarrow \mathbb{R}^2$ be the displacement of each point $\boldsymbol{x} \in \Omega$. In this text we are not interested in rotational forces so $\nabla \boldsymbol{u} = \nabla \boldsymbol{u}^\intercal$. Then the strain tensor is defined as 
+\begin{equation} \label{eq-strain-tensor}
+    \boldsymbol{\epsilon}(\boldsymbol{u}) = \frac{1}{2}(\nabla \boldsymbol{u} + \nabla \boldsymbol{u}^\intercal)=\nabla \boldsymbol{u}.
+\end{equation}
+Also the Generalized Hooks Law states that
+\begin{equation}
+    C \boldsymbol{\overline{\epsilon}}  = \boldsymbol{\overline{\sigma}},
+\end{equation}
+where 
+\begin{equation*}
+    \boldsymbol{\overline{\epsilon}} =\begin{aligned}[t]
+    \begin{bmatrix}
+        \epsilon_{1 1} \\
+        \epsilon_{2 2} \\
+        \epsilon_{1 2} + \epsilon_{2 1}
+    \end{bmatrix}
+    \end{aligned}
+    \qquad \text{and} \qquad
+    \begin{aligned}[t]
+        \boldsymbol{\overline{\sigma}} = \begin{bmatrix}
+            \sigma_{1 1} \\
+            \sigma_{2 2} \\
+            \sigma_{1 2} 
+        \end{bmatrix}
+    \end{aligned},
+\end{equation*}
+and C is a linear transformation.
+Finally, for a static body the Cauchy momentum equation results in 
+\begin{equation} \label{eq-cauchy-momentum}
+    \nabla \cdot \boldsymbol{\sigma} = -\boldsymbol{f},
+\end{equation}
+where $\boldsymbol{f}$ is the force per area. Applying boundary conditions 
+\begin{align*}
+    \boldsymbol{u}  = \boldsymbol{g} \quad \text{on} \quad \Omega_D   \\
+    \boldsymbol{\sigma} \cdot \boldsymbol{\hat{n}}  =  \boldsymbol{h} \quad \text{on} \quad \Omega_N,
+\end{align*}
+result in the corresponding boundary value problem. 
+\subsection{Th weak formulation}
+\begin{proposition}
+    % Skal vi ha med lifing functions her ??. Ikke enda?
+    The weak formulation of \eqref{eq-cauchy-momentum} with homogeneous dirichlet conditions is given by:  
+    \begin{equation*}
+        \begin{aligned}
+        &\text{find } u \in X : 
+        &a(u,v) = l(v) \ \forall v \in H_0^{1}(\Omega), 
+        \end{aligned}
+    \end{equation*}
+    where $a$ is the bilinear functional and $l$ the linear functional defined as 
+    \begin{equation*}
+        \begin{aligned}
+            a(u,v) &= \int_{\Omega} \boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)  \, dA
+            \\
+            l(v) &= \int_\Omega{\boldsymbol{v} \cdot  \boldsymbol{f}} \,dA + \int_{\partial \Omega_D}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS + \int_{\partial \Omega_N}{\boldsymbol{v}^\intercal \boldsymbol h} \,dS,
+        \end{aligned}
+    \end{equation*}
+    and $ X=   H^1_{\partial \Omega_D } \times H^1_{\partial \Omega_D } $.
+\end{proposition}
+\begin{proof}
+Taking the dot product of  Equation \eqref{eq-cauchy-momentum} with a test function $\boldsymbol{v} = [v_1, v_2]^\intercal$, then integrating over $\Omega$, the left side becomes
+\begin{equation} \label{eq-cauchy-expand}
+    \int_\Omega{\boldsymbol{v}^\intercal \nabla \cdot \boldsymbol{\sigma}} \,dA = \sum_{i = 1,2}\left(\int_\Omega{\boldsymbol{v_i} \nabla \cdot \boldsymbol{\sigma_i}} \,dA \right),
+\end{equation}
+where $\boldsymbol{\sigma_i}$ correspons to the i-th row of the stress tensor $\boldsymbol{\sigma}$. 
+Then applying the Divergence Theorem and $\nabla \cdot (v_i \boldsymbol{\sigma_i})  = v_i \nabla \cdot \boldsymbol{\sigma_i} + \boldsymbol{\sigma_i} \cdot \nabla v_i$ results in 
+\begin{equation} \label{eq-div-theorem-to-Cauchy-momentum}
+    \int_\Omega{{v_i} \nabla \cdot \boldsymbol{\sigma_i}}  \,dA = -\int_\Omega{\boldsymbol{\sigma_i}^\intercal \nabla v_i}  \,dA +  \int_{\partial \Omega}{v_i \boldsymbol{\sigma_i} \cdot \boldsymbol{\hat{n}} }  \,dS.
+\end{equation}
+Interperating $\boldsymbol{v}$ as displacement we get the corresponding strain tensor $\boldsymbol{\epsilon} (\boldsymbol v)$. Expanding each term of Equation\eqref{eq-cauchy-expand} like Equation \eqref{eq-div-theorem-to-Cauchy-momentum} and inserting the strain tensor of $\boldsymbol{v}$ we get
+\begin{equation}\label{eq-elastic-weak-left}
+    \int_\Omega{\boldsymbol{v}^\intercal \nabla \cdot \boldsymbol{\sigma}} \,dA = -\int_\Omega{\tr[ \boldsymbol{\epsilon}(\boldsymbol v)\boldsymbol{\sigma}(\boldsymbol u)]} \,dA + \int_{\partial \Omega}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS.
+\end{equation}
+Thus Equation \eqref{eq-cauchy-momentum} becomes
+\begin{equation} \label{eq-almost-elastic-weak}
+    \int_\Omega{\tr[ \boldsymbol{\epsilon}(\boldsymbol v)\boldsymbol{\sigma}(\boldsymbol u)]} \,dA  = \int_\Omega{\boldsymbol{v} \cdot  \boldsymbol{f}} \,dA + \int_{\partial \Omega}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS.
+\end{equation}
+By expanding all the matix operations Equation \eqref{eq-almost-elastic-weak} can be written as 
+\begin{equation}
+    \sum_{i = 1,2,3} \left[\int_\Omega{ \overline{\sigma}_i(\boldsymbol v) \overline{\epsilon}_i(\boldsymbol v)}   \,dA \right] = \sum_{i = 1}^2 \left[\int_\Omega{ v_i f_i}   \,dA \right] + \sum_{i = 1}^{2}{{\sum_{j = 1}^{2} \left[\int_{\partial \Omega}{ v_i \sigma_{ij} \hat{n}_j}   \,dS \right]}}. 
+\end{equation}
+The left side of this equation is the integral over $\boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal \boldsymbol{\overline \sigma}(\boldsymbol u) = \boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)$. Therefore Equation \eqref{eq-almost-elastic-weak} is equivalent to the more compact form
+\begin{align}
+    \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)} \,dA  &=\int_\Omega{\boldsymbol{v} \cdot  \boldsymbol{f}} \,dA + \int_{\partial \Omega}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS  \\
+    &= \int_\Omega{\boldsymbol{v} \cdot  \boldsymbol{f}} \,dA + \int_{\partial \Omega_D}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS + \int_{\partial \Omega_N}{\boldsymbol{v}^\intercal \boldsymbol h} \,dS,
+\end{align}
+where the Neumann boundary conditions where incooroprated into the last step.
+
+Since $\bm v$ was arbitrary the weak formulation follows. Furthermore, all $\bm u$ and $\bm v$ must belong to a space such that $\boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u) \in {L^1}(\Omega)$. By linearity of the integral then $\nabla \bm u$ and $\nabla \bm v$ must be in $\left[{L^2}(\Omega)\right]^{2 \times 2}$; thus $\bm u$ and $\bm v$ must be in $ H^1_{\partial \Omega_D } \times H^1_{\partial \Omega_D } $
+\end{proof}
+
+
 
 \section{Numerical experiments}
 \subsection{Mesh}
