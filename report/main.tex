@@ -397,7 +397,7 @@ result in the corresponding boundary value problem.
         \begin{aligned}
             a(u,v) &= \int_{\Omega} \boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)  \, dA
             \\
-            l(v) &= \int_\Omega{\boldsymbol{v} \cdot  \boldsymbol{f}} \,dA  + \int_{\partial \Omega_N}{\boldsymbol{v}^\intercal \boldsymbol h} \,dS,
+            l(v) &= \int_\Omega{\boldsymbol{v}^\intercal \boldsymbol{f}} \,dA  + \int_{\partial \Omega_N}{\boldsymbol{v}^\intercal \boldsymbol h} \,dS,
         \end{aligned}
     \end{equation*}
     and $ X=   H^1_{\partial \Omega_D } \times H^1_{\partial \Omega_D } $.
@@ -426,8 +426,8 @@ By expanding all the matix operations Equation \eqref{eq-almost-elastic-weak} ca
 \end{equation}
 The left side of this equation is the integral over $\boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal \boldsymbol{\overline \sigma}(\boldsymbol u) = \boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)$. Therefore Equation \eqref{eq-almost-elastic-weak} is equivalent to the more compact form
 \begin{align}
-    \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)} \,dA  &=\int_\Omega{\boldsymbol{v} \cdot  \boldsymbol{f}} \,dA + \int_{\partial \Omega}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS  \\
-    &= \int_\Omega{\boldsymbol{v} \cdot  \boldsymbol{f}} \,dA + \underbrace{\int_{\partial \Omega_D}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS}_{= \ 0} + \int_{\partial \Omega_N}{\boldsymbol{v}^\intercal \boldsymbol h} \,dS,
+    \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)} \,dA  &=\int_\Omega{\boldsymbol{v}^\intercal \boldsymbol{f}} \,dA + \int_{\partial \Omega}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS  \\
+    &= \int_\Omega{\boldsymbol{v}^\intercal \boldsymbol{f}} \,dA + \underbrace{\int_{\partial \Omega_D}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS}_{= \ 0} + \int_{\partial \Omega_N}{\boldsymbol{v}^\intercal \boldsymbol h} \,dS,
 \end{align}
 where the Neumann boundary conditions where incooroprated into the last step.
 
