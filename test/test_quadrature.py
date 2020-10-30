@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from part1.quadrature import quadrature1D, quadrature2D, vertices_to_area_2D
+from femsolver.quadrature import quadrature1D, quadrature2D, vertices_to_area_2D
 import sympy as sy
 
 

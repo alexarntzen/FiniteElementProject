@@ -5,7 +5,7 @@ import numpy as np
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
 import test.getdisc as gd
-from part1.solver import solve, get_A_F
+from femsolver.solver import solve, get_A_F
 
 
 def u(x):
