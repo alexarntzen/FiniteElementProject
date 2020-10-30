@@ -352,6 +352,7 @@ Let $\boldsymbol{u} : \Omega \rightarrow \mathbb{R}^2$ be the displacement of ea
 Also the Generalized Hooks Law states that
 \begin{equation}
     C \boldsymbol{\overline{\epsilon}}  = \boldsymbol{\overline{\sigma}};
+    \label{hooks-law}
 \end{equation}
 where 
 \begin{equation*}
@@ -377,10 +378,11 @@ Finally, for a static body the Cauchy momentum equation results in
     \nabla \cdot \boldsymbol{\sigma} = -\boldsymbol{f},
 \end{equation}
 where $\boldsymbol{f}$ is the force per area. Applying boundary conditions 
-\begin{align*}
+\begin{align}
     \boldsymbol{u}  = \boldsymbol{g} \quad \text{on} \quad \Omega_D   \\
     \boldsymbol{\sigma} \cdot \boldsymbol{\hat{n}}  =  \boldsymbol{h} \quad \text{on} \quad \Omega_N,
-\end{align*}
+    \label{elasticity-bc}
+\end{align}
 result in the corresponding boundary value problem. 
 \subsection{Th weak formulation}
 \begin{proposition}
@@ -499,7 +501,72 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
 \end{proof}
 
 
-\subsection{}
+\subsection{Test case}
+
+
+    We consider an analytical solution $u$ to the elasticity problem \eqref{eq-cauchy-momentum} with homogeneous Dirichlet boundary conditions.
+
+\begin{proposition}
+    $u: \mathbb{R}^2 \rightarrow \mathbb{R}$ such that
+
+    \begin{equation} \bm u =
+        \begin{bmatrix}
+            (x^2-1)(y^2-1) \\
+            (x^2-1)(y^2-1)
+        \end{bmatrix},
+    \end{equation}
+
+    is a solution to the problem
+
+    \begin{align*}
+        \nabla \bm \sigma (\bm u) &= -\bm f \, \text{in} \, \Omega \\
+        \bm u &= \bm 0 \, \text{on} \, \partial \Omega,
+    \end{align*}
+
+    where
+
+    \begin{align*}
+        \bm f = \frac{E}{1-\nu^2}   
+        \begin{bmatrix}
+            -2y^2 + x^2(\nu - 1) -2xy(\nu +1) + 3 - \nu \\
+            -2x^2 + y^2(\nu - 1) -2xy(\nu +1) + 3 - \nu 
+        \end{bmatrix}^T,
+    \end{align*}
+
+    and $\Omega = \{ (x,y) : \max (|x|,|y|) \leq 1 \}$ is the reference square $(-1,1) \times (-1,1)$.
+
+\end{proposition}
+
+\begin{proof}
+By Hooks law \eqref{hooks-law} have that $C \bar{\epsilon} = \bar{\sigma}$ where 
+
+\begin{equation*}
+    C = \underbrace{\frac{E}{1-\nu^2}}_{=c}\begin{bmatrix}
+        1&\nu&0\\
+        \nu&1&0\\
+        0&0&\frac{1-\nu}{2}
+    \end{bmatrix},
+\end{equation*}
+
+furthermore, as both components of $\bm u$ are identical we write $\bm u = [u,u]^T$ where we denote derivatives by $\frac{\partial u}{\partial x} = u_x, \, \frac{\partial^2 u}{\partial x \partial y} = u_{xy} \cdots$,
+we get
+
+\begin{align}
+    \nabla\bm\sigma(u) &= 
+    c\begin{bmatrix}
+        u_{xx} + u_{yy}\frac{1-\nu}{2} + u_{xy}(\nu + \frac{1-\nu}{2})\\
+        u_{yy} + u_{xx}\frac{1-\nu}{2} + u_{xy}(\nu + \frac{1-\nu}{2})
+    \end{bmatrix}^T\\
+    &= c\begin{bmatrix}
+        2y^2 - x^2(\nu - 1) +2xy(\nu +1) - 3 + \nu \\
+        2x^2 - y^2(\nu - 1) +2xy(\nu +1) - 3 + \nu
+    \end{bmatrix}^T\\
+    &= -\bm f^T.
+\end{align}
+
+On the boundary $\partial \Omega = (-1,1)\times(-1,1)$ we get $\bm u(x,y) = \bm 0 \forall (x,y) \in \partial \Omega$.
+Hence we find that $\bm u$ fullfills all requirements in proposition 6.  
+\end{proof}
     
 
 
