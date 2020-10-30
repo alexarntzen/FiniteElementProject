@@ -437,7 +437,67 @@ Since $\bm v$ was arbitrary the weak formulation follows. Furthermore, all $\bm 
     The case for nonhomogenious Dirichlet boundary conditions can be solved by lifting functions.
 \end{remark}
 \subsection{Galerkin projection}
+Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
 
+\begin{proposition}
+    The finite dimentional equivalent of the weak formulation given in Proposition 4 is given by
+
+
+        \begin{align}
+        &\text{find } u \in \mathbb{R}^n : 
+        &\bm A \bm u = \bm b,
+        \end{align}
+
+
+    where 
+
+
+        \begin{align}
+        A = [A_{ij}] &= \int_\Omega \overline\epsilon (\bm \varphi_i)^T C \overline \epsilon (\bm \varphi_j) \, dA \\
+        b = [b_i] &= \int_\Omega \bm \varphi_i^T \bm f \, dA + \int_{\partial \Omega_N} \bm \varphi_i^T \bm h \, d\bm S,
+        \end{align}
+
+
+    where each node $\hat i$ has two test functions
+    
+ 
+        \begin{align}
+        \bm \varphi_{\hat i,1} (\bm x) = 
+         \begin{bmatrix}
+            \varphi_{\hat i}  \\
+            0 
+        \end{bmatrix},
+        &
+        \bm \varphi_{\hat i,2} (\bm x) = 
+        \begin{bmatrix}
+            0  \\
+            \varphi_{\hat i} 
+        \end{bmatrix} 
+    \end{align}
+
+    where for $\bm \varphi_i$ we have a single index $i = 2\hat i + d$ where $i$ is the node number and $d$ is the vector component of the function.
+\end{proposition}
+
+\begin{proof}
+    As $\bm u,\bm v \in X_h$ are projections into a finite subspace, we can write the functions as an expansion of basis functions $\bm \varphi$. Hence we can write 
+    $\bm v = \bm \varphi_j$ and $\bm u = \sum_i u_i \bm \varphi_i, u_i \in \mathbb{R}$. As $\bar \epsilon( \cdot )$ is linear we get  
+
+    \begin{align*}
+        a(u,v) &= \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)} \,dA  \\
+        &=\sum_i u_i  \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_j)^\intercal C  \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_i)} \,dA \\
+        &= \sum_i u_i a(\bm \varphi_i,\bm \varphi_j) \\
+        &= \bm A \bm u
+    \end{align*}
+
+    where $\bm u = [u_1,u_2,\cdots,u_n]$, finally we have the linear form
+
+    \begin{align*}
+            l(v)&= \int_\Omega{\boldsymbol{v} \cdot  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\boldsymbol{v}^\intercal \boldsymbol h} \,dS \\
+            &= \int_\Omega{\boldsymbol{\varphi_i}^T  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\boldsymbol{\varphi_i}^\intercal \boldsymbol h} \,dS \\
+            &= \bm b,
+    \end{align*}
+\end{proof}
+    
 
 
 \section{Numerical experiments}
