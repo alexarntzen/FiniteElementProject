@@ -20,20 +20,22 @@ def f(x):
 def g(x):
     return 4 * np.pi * np.linalg.norm(x) * np.cos(2 * np.pi * np.sum(x ** 2))
 
-# Test that the proto problem matrix is singular. 
+
+# Test that the proto problem matrix is singular.
 class TestSingularity(unittest.TestCase):
     def test_singularity(self):
         test_values = 2 ** np.arange(4, 11)
         print("\n\nChecking matrix is singular before applying boundary conditions")
         for N in test_values:
             p, tri, edge = gd.GetDisc(N)
-            A, F = get_A_F(p, tri, [], 4, f)
+            A, F = get_A_F(p, tri, [], f, Nq=4)
             n = np.shape(A)[0]
             rank = np.linalg.matrix_rank(A)
             print("Rank of A: ", rank, ". Size of matrix A :(", n, " x ", n, ")")
             self.assertNotEqual(n, rank)
 
-# Test the solver on the problem from task 2 
+
+# Test the solver on the problem from task 2
 class TestHomogeneousDirichlet(unittest.TestCase):
 
     def test_compare_analytic(self):
@@ -49,7 +51,7 @@ class TestHomogeneousDirichlet(unittest.TestCase):
             u_max = np.max(np.abs(u(p.T)))
 
             # numerical solution
-            U = solve(p, tri, edge, 4, f)
+            U = solve(p, tri, edge, f, Nq=4)
 
             max_error = np.max(np.abs(U - u(p.T)))
             print(f"N = {N}, max error:", max_error)
@@ -72,7 +74,7 @@ class TestHomogeneousDirichlet(unittest.TestCase):
         fig = plt.figure(figsize=plt.figaspect(2))
 
         p, tri, edge = gd.GetDisc(N)
-        U = solve(p, tri, edge, 4, f)
+        U = solve(p, tri, edge, f, Nq=4)
         ax = fig.add_subplot(2, 1, 1, projection='3d')
         # ax.set_title("Numerical solution for Dirichlet")
         ax.set_zlabel("$U_{i,j}$")
@@ -91,6 +93,7 @@ class TestHomogeneousDirichlet(unittest.TestCase):
         plt.savefig("figures/plot_homogeneous_dirichlet.pdf")
         plt.clf()
 
+
 # Test the solver on the problem from task 3
 class TestSolverNeumann(unittest.TestCase):
     def test_compare_analytic(self):
@@ -108,7 +111,7 @@ class TestSolverNeumann(unittest.TestCase):
             u_max = np.max(np.abs(u(p.T)))
 
             # numerical solution
-            U = solve(p, tri, dirichlet_edges, 4, f=f, g=g, neumann_edges=neumann_edges)
+            U = solve(p, tri, dirichlet_edges, f=f, g=g, neumann_edges=neumann_edges, Nq=4)
             max_error = np.max(np.abs(U - u(p.T)))
             print(f"N = {N}, max error:", max_error)
             self.assertAlmostEqual(max_error, 0, delta=1e2 / N)
@@ -133,7 +136,7 @@ class TestSolverNeumann(unittest.TestCase):
         neumann_edges = edge[(p[edge[:, 0]][:, 1] > 0) & (p[edge[:, 1]][:, 1] > 0)]
         dirichlet_edges = edge[(p[edge[:, 0]][:, 1] <= 0) | (p[edge[:, 1]][:, 1] <= 0)]
 
-        U = solve(p, tri, dirichlet_edges, 4, f, g, neumann_edges)
+        U = solve(p, tri, dirichlet_edges, f, g, neumann_edges, Nq=4)
 
         ax = fig.add_subplot(2, 1, 1, projection='3d')
         # ax.set_title("Numerical solution for mixed Neumann")
