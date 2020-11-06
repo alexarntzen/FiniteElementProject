@@ -440,14 +440,14 @@ Since $\bm v$ was arbitrary the weak formulation follows. Furthermore, all $\bm 
 \end{remark}
 \subsection{Galerkin projection}
 Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
-
+ %TODO: Comment that \varphi is piecewise linear
 \begin{proposition}
     The finite dimentional equivalent of the weak formulation given in Proposition 4 is given by
 
 
         \begin{align}
         &\text{find } u \in \mathbb{R}^n : 
-        &\bm A \bm u = \bm b,
+        &\bm A \bm u_h = \bm b_h,
         \end{align}
 
 
@@ -456,7 +456,7 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
 
         \begin{align}
         A = [A_{ij}] &= \int_\Omega \overline\epsilon (\bm \varphi_i)^T C \overline \epsilon (\bm \varphi_j) \, dA \\
-        b = [b_i] &= \int_\Omega \bm \varphi_i^T \bm f \, dA + \int_{\partial \Omega_N} \bm \varphi_i^T \bm h \, d\bm S,
+        b = [b_j] &= \int_\Omega \bm \varphi_j^T \bm f \, dA + \int_{\partial \Omega_N} \bm \varphi_j^T \bm h \, d\bm S,
         \end{align}
 
 
@@ -482,21 +482,23 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
 
 \begin{proof}
     As $\bm u,\bm v \in X_h$ are projections into a finite subspace, we can write the functions as an expansion of basis functions $\bm \varphi$. Hence we can write 
-    $\bm v = \bm \varphi_j$ and $\bm u = \sum_i u_i \bm \varphi_i, u_i \in \mathbb{R}$. As $\bar \epsilon( \cdot )$ is linear we get  
+    $\bm v = [v_j] = \bm \varphi_j$ and $\bm u = \sum_i u_i \bm \varphi_i, u_i \in \mathbb{R}$. As $\bar \epsilon( \cdot )$ is linear we get equations for $j = 1,\cdots,n$ on the form
 
     \begin{align*}
-        a(u,v) &= \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)} \,dA  \\
+        a(\bm u,v_j) &= \int_\Omega{ \boldsymbol{\overline \epsilon}(v_j)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)} \,dA  \\
         &=\sum_i u_i  \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_j)^\intercal C  \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_i)} \,dA \\
-        &= \sum_i u_i a(\bm \varphi_i,\bm \varphi_j) \\
-        &= \bm A \bm u
+        &= \sum_i u_i a(\bm \varphi_j,\bm \varphi_i) \\
+        &= [A_j] \bm u_h \\
+        &= A \bm u_h
     \end{align*}
 
-    where $\bm u = [u_1,u_2,\cdots,u_n]$, finally we have the linear form
+    where $\bm u_h = [u_1,u_2,\cdots,u_n]$, finally we have equations for $v_j, j = 1,\cdots,n$ for the linear form
 
     \begin{align*}
-            l(v)&= \int_\Omega{\boldsymbol{v} \cdot  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\boldsymbol{v}^\intercal \boldsymbol h} \,dS \\
-            &= \int_\Omega{\boldsymbol{\varphi_i}^T  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\boldsymbol{\varphi_i}^\intercal \boldsymbol h} \,dS \\
-            &= \bm b,
+            l(v_j)&= \int_\Omega{\boldsymbol{v}^T  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\boldsymbol{v}^\intercal \boldsymbol h} \,dS \\
+            &= \int_\Omega{\boldsymbol{\varphi_j}^T  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\boldsymbol{\varphi_j}^\intercal \boldsymbol h} \,dS \\
+            &= [b_j]\\
+            &= \bm b_h,
     \end{align*}
 \end{proof}
 
@@ -564,7 +566,7 @@ we get
     &= -\bm f^T.
 \end{align}
 
-On the boundary $\partial \Omega = (-1,1)\times(-1,1)$ we get $\bm u(x,y) = \bm 0 \forall (x,y) \in \partial \Omega$.
+On the boundary $\partial \Omega = (-1,1)\times(-1,1)$ we get $\bm u(x,y) = \bm 0 \, \forall (x,y) \in \partial \Omega$.
 Hence we find that $\bm u$ fullfills all requirements in proposition 6.  
 \end{proof}
     
