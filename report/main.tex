@@ -481,22 +481,22 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
 \end{proposition}
 
 \begin{proof}
-    As $\bm u,\bm v \in X_h$ are projections into a finite subspace, we can write the functions as an expansion of basis functions $\bm \varphi$. Hence we can write 
-    $\bm v = [v_j] = \bm \varphi_j$ and $\bm u = \sum_i u_i \bm \varphi_i, u_i \in \mathbb{R}$. As $\bar \epsilon( \cdot )$ is linear we get equations for $j = 1,\cdots,n$ on the form
+    As $\bm u_h,\bm v_h \in X_h$ are projections into a finite subspace, we can write the functions as an expansion of basis functions $\bm \varphi$. Hence we can write 
+    $\bm v_h = \bm \varphi_j$ and $\bm u_h = \sum_i u_i \bm \varphi_i, u_i \in \mathbb{R}$. As $\bar \epsilon( \cdot )$ is linear we get equations for $j = 1,\cdots,n$ on the form
 
     \begin{align*}
-        a(\bm u,v_j) &= \int_\Omega{ \boldsymbol{\overline \epsilon}(v_j)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)} \,dA  \\
+        a(\bm u_h,\bm v_h) &= \int_\Omega{ \boldsymbol{\overline \epsilon}(\bm v_h)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)} \,dA  \\
         &=\sum_i u_i  \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_j)^\intercal C  \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_i)} \,dA \\
         &= \sum_i u_i a(\bm \varphi_j,\bm \varphi_i) \\
-        &= [A_j] \bm u_h \\
+        &= [A_j]^\intercal \bm u_h \\
         &= A \bm u_h
     \end{align*}
 
-    where $\bm u_h = [u_1,u_2,\cdots,u_n]$, finally we have equations for $v_j, j = 1,\cdots,n$ for the linear form
+    where $\bm u_h = [u_1,u_2,\cdots,u_n]^\intercal$, finally we have equations for $j = 1,\cdots,n$ for the linear form
 
     \begin{align*}
-            l(v_j)&= \int_\Omega{\boldsymbol{v}^T  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\boldsymbol{v}^\intercal \boldsymbol h} \,dS \\
-            &= \int_\Omega{\boldsymbol{\varphi_j}^T  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\boldsymbol{\varphi_j}^\intercal \boldsymbol h} \,dS \\
+            l(\bm v_h)&= \int_\Omega{\bm v_h^\intercal  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\bm v_h^\intercal \boldsymbol h} \,dS \\
+            &= \int_\Omega{\boldsymbol{\varphi_j}^\intercal  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\boldsymbol{\varphi_j}^\intercal \boldsymbol h} \,dS \\
             &= [b_j]\\
             &= \bm b_h,
     \end{align*}
