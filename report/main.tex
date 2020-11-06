@@ -384,7 +384,7 @@ where $\boldsymbol{f}$ is the force per area. Applying boundary conditions
     \label{elasticity-bc}
 \end{align}
 result in the corresponding boundary value problem. 
-\subsection{Th weak formulation}
+\subsection{The weak formulation}
 \begin{proposition}
     % Skal vi ha med lifing functions her ??. Ikke enda?
     The weak formulation of \eqref{eq-cauchy-momentum} with homogeneous dirichlet conditions is given by:  
@@ -392,6 +392,7 @@ result in the corresponding boundary value problem.
         \begin{aligned}
         &\text{find } u \in X : 
         &a(u,v) = l(v) \ \forall v \in H_0^{1}(\Omega), 
+        \label{weak_formulation}
         \end{aligned}
     \end{equation*}
     where $a$ is the bilinear functional and $l$ the linear functional defined as 
@@ -446,8 +447,8 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
 
 
         \begin{align}
-        &\text{find } u \in \mathbb{R}^n : 
-        &\bm A \bm u_h = \bm b_h,
+        &\text{find } \bm u_h \in \mathbb{R}^n : \\
+        & A \bm u_h = \bm b_h,
         \end{align}
 
 
@@ -456,7 +457,7 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
 
         \begin{align}
         A = [A_{ij}] &= \int_\Omega \overline\epsilon (\bm \varphi_i)^T C \overline \epsilon (\bm \varphi_j) \, dA \\
-        b = [b_j] &= \int_\Omega \bm \varphi_j^T \bm f \, dA + \int_{\partial \Omega_N} \bm \varphi_j^T \bm h \, d\bm S,
+        \bm b_h = [b_j] &= \int_\Omega \bm \varphi_j^T \bm f \, dA + \int_{\partial \Omega_N} \bm \varphi_j^T \bm h \, d\bm S,
         \end{align}
 
 
@@ -488,18 +489,25 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
         a(\bm u_h,\bm v_h) &= \int_\Omega{ \boldsymbol{\overline \epsilon}(\bm v_h)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)} \,dA  \\
         &=\sum_i u_i  \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_j)^\intercal C  \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_i)} \,dA \\
         &= \sum_i u_i a(\bm \varphi_j,\bm \varphi_i) \\
-        &= [A_j]^\intercal \bm u_h \\
-        &= A \bm u_h
+        &= A_j \bm u_h \\
     \end{align*}
 
-    where $\bm u_h = [u_1,u_2,\cdots,u_n]^\intercal$, finally we have equations for $j = 1,\cdots,n$ for the linear form
+    where $\bm u_h = [u_1,u_2,\cdots,u_n]^\intercal$ and $A_j = [a(\bm \varphi_j,\bm \varphi_1),\cdots,a(\bm \varphi_j,\bm \varphi_n)]$ finally we have equations for $j = 1,\cdots,n$ for the linear form
 
     \begin{align*}
             l(\bm v_h)&= \int_\Omega{\bm v_h^\intercal  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\bm v_h^\intercal \boldsymbol h} \,dS \\
             &= \int_\Omega{\boldsymbol{\varphi_j}^\intercal  \boldsymbol{f}} \,dA + \int_{\partial \Omega_N}{\boldsymbol{\varphi_j}^\intercal \boldsymbol h} \,dS \\
-            &= [b_j]\\
-            &= \bm b_h,
+            &= b_j\\
     \end{align*}
+    
+    Taking $A_j$ as rows in a matrix $A$, $\bm b_h = [b_1,\cdots,b_n]^\intercal$ and by the weak formulation \eqref{weak_formulation} we get
+
+    \begin{align*}
+        a(\bm u_h,\bm v_h) &= l(\bm v_h), \\
+        A_j \bm u_h &= b_j, \,\, j = 1,\cdots,n\\
+        \implies A\bm u_h &= \bm b_h.
+    \end{align*}
+
 \end{proof}
 
 
