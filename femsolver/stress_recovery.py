@@ -6,21 +6,45 @@ def get_derivative(U, p, element):
     p1, p2, p3 = p[element[0]], p[element[1]], p[element[2]]
     v1 = p2 - p1
     v2 = p3 - p1
-    V = np.array([v1,v2])
+    V = np.array([v1, v2])
+    # Derrivative in v coordinate system
     DU_V = np.array([
         (U[element[1]] - U[element[0]]),
         (U[element[2]] - U[element[0]])
     ])
-    return np.linalg.inv(V)@DU_V
+
+    # Derivative in standard basis
+    return np.linalg.inv(V) @ DU_V
 
 
-def get_strain(U, p, tri):
-    return 1
+def get_strain_vector(U, p, element):
+    DU = get_derivative(U, p, element)
+    return np.array([
+        DU[0, 0],
+        DU[1, 1],
+        DU[0, 1] + DU[1, 0]])
 
 
-def get_eps(U, p, tri):
-    return 1
+def get_stress(U, p, element, C):
+    strain_vector = get_strain_vector(U, p, element)
+    stress_vector = C @ strain_vector
+    # return strain tensor
+    return np.array([
+        [stress_vector[0], stress_vector[2]],
+        [stress_vector[2], stress_vector[1]]
+    ])
 
 
-def get_naive_stress_recovery(U, p, tri):
-    return 1
+def get_naive_stress_recovery(U, p, tri, C):
+    nodes, k = U.shape
+    element_per_node = np.zeros(nodes, dtype=np.uint64)
+    stress_recovery = np.zeros((nodes, k, k))
+    for element in tri:
+        sigma = get_stress(U, p, element, C)
+        for index in element:
+            stress_recovery[index] += sigma
+            element_per_node[index] += 1
+    #Averaging over patches
+    for i in range(nodes):
+        stress_recovery[i]/=element_per_node[i]
+    return stress_recovery
