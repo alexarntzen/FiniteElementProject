@@ -137,7 +137,7 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         
         plt.ylabel(" $|| U_f - U_h ||_{\infty}$")
         plt.xlabel("Element size, $h$")
-        plt.savefig("figures/decresing_h.pdf")
+        plt.savefig("figures/decreasing_h_error.pdf")
         plt.clf()
 
         time_convergence = np.polyfit(np.log(element_sizes),np.log(run_times),deg=1)[0]
@@ -147,7 +147,7 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         plt.loglog(element_sizes,run_times,marker="o")
         plt.ylabel("Run time ($s$)")
         plt.xlabel("Element size, $h$")
-        plt.savefig("figures/decresing_h_rt.pdf")
+        plt.savefig("figures/decreasing_h_runtime.pdf")
         plt.clf()
 
 
