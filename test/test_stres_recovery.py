@@ -130,7 +130,7 @@ class TestStressRecovery(unittest.TestCase):
         ax2 = fig.add_subplot(2, 1, 2, projection='3d')
         # ax2.set_title("Error")
         ax2.set_zlabel("$\sigma_{x,i,j} - \sigma_{x,(x_i,y_j)}$")
-        ax2.plot_trisurf(p[:, 0], p[:, 1], Sigma[:, dim[0], dim[1]]-Sigma_exact[:, dim[0], dim[1]], cmap=cm.viridis)
+        ax2.plot_trisurf(p[:, 0], p[:, 1], Sigma[:, dim[0], dim[1]] - Sigma_exact[:, dim[0], dim[1]], cmap=cm.viridis)
         # ax.plot_trisurf(p[:, 0], p[:, 1], U)
         plt.savefig(f"figures/plot_homogeneous_dirichlet_elestic_sigma_dim_{dim[0]}_{dim[1]}.pdf")
         plt.clf()

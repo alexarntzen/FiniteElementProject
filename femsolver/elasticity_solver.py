@@ -66,7 +66,7 @@ def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.e
                     for db in [0, 1]:
                         # finding A matrix
                         HaHb_derivative = lambda x: (Epsilon[da] @ B[1:3, alpha]).T @ C @ (Epsilon[db] @ B[1:3, beta])
-                        I_ab = qd.quadrature2D(p1, p2, p3, 1, HaHb_derivative)
+                        I_ab = (Epsilon[da] @ B[1:3, alpha]).T @ C @ (Epsilon[db] @ B[1:3, beta])*qd.vertices_to_area_2D(p1,p2,p3)
                         A[index(element[alpha], da), index(element[beta], db)] += I_ab
                         # apply neumann conditions if applicable
 
