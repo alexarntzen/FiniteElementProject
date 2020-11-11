@@ -23,7 +23,6 @@ def get_f(E, v):
     ])
     return f
 
-
 def get_C(E, v):
     return E / (1 - v ** 2) * np.array([
         [1, v, 0],
@@ -76,23 +75,28 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         plt.savefig("figures/convergence_homogeneous_dirichlet_elastic.pdf")
         plt.clf()
 
-
+    #Test the solver for a problem with small element sizes
+    #and compare with solutions on a coarser mesh
     def test_decreasing_h(self):
 
         E = 5
         v = 0.1
 
+        #Maximum N / minimum stepsize, h = 1/(2**i_max)
         i_max = 6
         N_finest = 2**i_max + 1
         N_list = 2 ** np.arange(1, i_max - 1) + 1
-        test_values = N_list ** 2 * 2
+        
+        test_values =  N_list ** 2 * 2
         u_max = 1
 
         rel_errors = np.zeros(len(N_list))
-        run_times = np.zeros(len(N_list))
-
-
+        run_times = np.zeros(len(N_list)+1)
+        
         def get_solution(N):
+            # p is coordinates of all nodes
+            # tri is a list of indicies (rows in p) of all nodes belonging to one element
+            # edge is lists of all nodes on the edge
             p, tri, edge = gp.getPlate(N)
             edge -= 1
             t1 = time.time()
@@ -100,38 +104,49 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
             t2 = time.time()
             return U,t2-t1
 
+        print(f"Comparing elastic solution for h_small = {1/N_finest:.3f} to larger step sizes.")
+
         U_finest,td = get_solution(N_finest)
-        print(td)
+        run_times[-1] = td
+        
 
         for i,N in enumerate(N_list):
             
             U_N,td =  get_solution(N)
-
             u_max = np.max(np.abs(U_N))
 
+            #getting points that have same location in fine and coarse mesh
             r = (N_finest-1)//(N-1)
             l_to_s_index = np.array([np.arange(0+j*r*N_finest,N_finest+j*r*N_finest,r).tolist() for j in range(0,N)]).flatten()
+            max_error = np.max(np.abs(U_N[:,1] - U_finest[:,1][l_to_s_index]))
+            print(f"h = {1/N:.2f}, max error: {max_error:.5f} run time: {td:.3f}")
+            self.assertAlmostEqual(max_error, 0, delta=10 / test_values[i])
 
-            #max_error = np.max(np.abs(U_N[:,1] - U_finest[:,1][l_to_s_index]))
-            max_error = np.linalg.norm((U_N[:,1] - U_finest[:,1][l_to_s_index]),ord=np.inf)
             rel_errors[i] = max_error
             run_times[i] = td
 
+        N_list = np.append(N_list,N_finest)
         element_sizes = 1/N_list
+        
+        convergence = np.polyfit(np.log(element_sizes[:-1]),np.log(rel_errors),deg=1)[0]
+        print("Convergence: ", convergence)
 
-        convergence = np.polyfit(np.log(element_sizes),np.log(rel_errors),deg=1)[0]
-        print(convergence)
-
-
-        plt.loglog(element_sizes,rel_errors,marker="o")
-        plt.ylabel("Relative error")
-        plt.xlabel("Element size, h")
+        plt.gcf().subplots_adjust(left=0.15)
+        plt.title("Relative deviance for different element sizes")
+        plt.loglog(element_sizes[:-1],rel_errors,marker="o")
+        
+        plt.ylabel(" $|| U_f - U_h ||_{\infty}$")
+        plt.xlabel("Element size, $h$")
         plt.savefig("figures/decresing_h.pdf")
         plt.clf()
 
-        plt.plot(element_sizes,run_times,marker="o")
-        plt.ylabel("Run time (s)")
-        plt.xlabel("Element size, h")
+        time_convergence = np.polyfit(np.log(element_sizes),np.log(run_times),deg=1)[0]
+        print("Time Convergence: ", time_convergence)
+
+        plt.title("Runtime for different element sizes")
+        plt.loglog(element_sizes,run_times,marker="o")
+        plt.ylabel("Run time ($s$)")
+        plt.xlabel("Element size, $h$")
         plt.savefig("figures/decresing_h_rt.pdf")
         plt.clf()
 
