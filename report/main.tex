@@ -36,6 +36,7 @@
 \usepackage{physics}
 
 
+
 \usepackage{siunitx}					% Må inkluderes for blant annet å få tilgang til kommandoen \SI (korrekte måltall med enheter)
 	\sisetup{exponent-product = \cdot}      	% Prikk som multiplikasjonstegn (i steden for kryss).
  	\sisetup{output-decimal-marker  =  {,}} 	% Komma som desimalskilletegn (i steden for punktum).
@@ -606,11 +607,12 @@ Examples of such  meshes for $N = 16,64,256$ are shown in Figure \ref{plot-meshe
             \caption{Solution and error with mixed boundary conditions}
         \label{solution-error-mixed}
     \end{subfigure}
-    \label{fig-convergence}
+    \label{plot-solution-error}
     \caption{The poission problem solved on a disc mesh with $N = 1024$ nodes.
     The top plot displays the numerical solution from the Galerkin projection,
     while the bottom figure displays the error in the nodal points.}
 \end{figure}
+
 \subsection{Homogeneous Dirichlet boundary conditions}
 The finite element method described is tested on the Poisson problem with homogeneous Dirichlet conditions and $f$ given by Equation \eqref{f-analytic}. 
 By Proposition \ref{prop-analytical-solution} the solution is known and is used as a reference. 
@@ -642,6 +644,45 @@ The finite element method is used to solve the Poisson problem given by \eqref{p
     \caption{Relative error of numerical solutios to the poission problem for multiple mesh discs. The number of nodes given by $N_n = \{ 2^n\}_{n=4}^{10}$
     where $N_{min} = 16$ and $N_{max} = 1024$.}
 \end{figure}
+
+
+\subsection{Elasticity with Homogeneous Dirichlet boundary conditions}
+
+
+\begin{figure}[ht]
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+            \includegraphics[width=\linewidth]{figures/plot_homogeneous_dirichlet_elastic_x.pdf}
+            \caption{Solution $u_x$ and error of the elasticity problem with Dirichlet boundary conditions.}
+        \label{solution-error-dirichlet-elastic-x}
+    \end{subfigure}\qquad
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+            \includegraphics[width=\linewidth]{figures/plot_homogeneous_dirichlet_elastic_sigma_dim_0_0.pdf}
+            \caption{Recovered stress $\sigma_{xx}$}
+        \label{solution-error-dirichlet-elastic-y}
+    \end{subfigure}
+    \label{plot-elasticity}
+    \caption{The elasticity problem problem solved on the unit square mesh with $N = 256$ nodes. The top figures displays displacement $u_x$ to the left and the recovered stress $\sigma_{xx}$ to the right. The bottom figures displays the error in the nodal points for displacement and stress, $e_{i,j} = U_{i,j} - u(x_i,y_j)$.}
+\end{figure}
+
+
+\begin{figure}[t]
+    \begin{subfigure}[t]{0.5\linewidth}
+            \centering
+                \includegraphics[width=\linewidth]{figures/decreasing_h_error.pdf}
+            \caption{Relative deviance $\|U_f - U_{h,i}\|_{\infty}$ between fine mesh $h_f$ and coarser meshes $h_i$.}
+            \label{error-convergence-elastic}
+        \end{subfigure}\qquad
+        \begin{subfigure}[t]{0.5\linewidth}
+            \centering
+                \includegraphics[width=\linewidth]{figures/decreasing_h_runtime.pdf}
+            \caption{Runtime, number of seconds to solve the elasticity problem on meshes with element sizes $h_i$ including the fine mesh with $h_{fine}.$}
+            \label{time-convergence-elastic}
+        \end{subfigure}
+        \label{fig-convergence-elastic}
+        \caption{The elasicity problem is first solved on a fine mesh with element size $h_{fine} = \frac{1}{2^6}$. Furtheremore we solve the problem on coarser meshes with $h_i = \frac{1}{2^i}, i = 1,2,3,4$, yielding an approximate method to check for convergence.}
+    \end{figure}
    
 \section{Conclusion}
 The finite difference method described compares well with the analytic solution from Equation \eqref{analytical-solution}. For 1024 nodes, the maximal relative error is approximately $e_{rel,max} \approx 0.02$ for homogeneous Dirichlet boundary conditions, and approximately $e_{rel,max} \approx 0.03$ for mixed boundary conditions. In addition, the error decreases with  the number of nodes increases. This indicates that the method is convergent.

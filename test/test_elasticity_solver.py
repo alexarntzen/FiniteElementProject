@@ -128,8 +128,8 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         N_list = np.append(N_list,N_finest)
         element_sizes = 1/N_list
         
-        convergence = np.polyfit(np.log(element_sizes[:-1]),np.log(rel_errors),deg=1)[0]
-        print("Convergence: ", convergence)
+        error_convergence = np.polyfit(np.log(element_sizes[:-1]),np.log(rel_errors),deg=1)[0]
+        print("Convergence: ", error_convergence)
 
         plt.gcf().subplots_adjust(left=0.15)
         plt.title("Relative deviance for different element sizes")
@@ -143,12 +143,18 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         time_convergence = np.polyfit(np.log(element_sizes),np.log(run_times),deg=1)[0]
         print("Time Convergence: ", time_convergence)
 
+        plt.gcf().subplots_adjust(left=0.15)
         plt.title("Runtime for different element sizes")
         plt.loglog(element_sizes,run_times,marker="o")
         plt.ylabel("Run time ($s$)")
         plt.xlabel("Element size, $h$")
         plt.savefig("figures/decreasing_h_runtime.pdf")
         plt.clf()
+
+        convergence = np.column_stack((error_convergence,time_convergence))
+        print(convergence)
+
+        np.savetxt("figures/convergence.dat",convergence,header="error_convergence \t time_convergence",fmt='%.2f',delimiter='\t')
 
 
     def test_plot(self):
@@ -163,12 +169,20 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
 
         ax = fig.add_subplot(2, 1, 1, projection='3d')
         # ax.set_title("Numerical solution for Dirichlet")
+
         ax.set_zlabel("$U_{i,j}$")
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
         ax.plot_trisurf(p[:, 0], p[:, 1], U[:, 0], cmap=cm.viridis)
 
         ax2 = fig.add_subplot(2, 1, 2, projection='3d')
+        ax2.zaxis._axinfo['label']['space_factor'] = 4
         # ax2.set_title("Error")
-        ax2.set_zlabel("$U_{x,i,j} - u_{x,(x_i,y_j)}$")
+        ax2.ticklabel_format(axis='z',style='sci',scilimits=(0,0))
+        
+        ax2.set_zlabel("$e_{x,i,j}$")
+        ax2.set_xlabel("x")
+        ax2.set_ylabel("y")
         ax2.plot_trisurf(p[:, 0], p[:, 1], U[:, 0] - u(p.T)[0], cmap=cm.viridis)
         # ax.plot_trisurf(p[:, 0], p[:, 1], U)
         plt.savefig("figures/plot_homogeneous_dirichlet_elastic_x.pdf")
@@ -178,11 +192,16 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         ax = fig.add_subplot(2, 1, 1, projection='3d')
         # ax.set_title("Numerical solution for Dirichlet")
         ax.set_zlabel("$U_{i,j}$")
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
         ax.plot_trisurf(p[:, 0], p[:, 1], U[:, 1], cmap=cm.viridis)
 
         ax2 = fig.add_subplot(2, 1, 2, projection='3d')
         # ax2.set_title("Error")
-        ax2.set_zlabel("$U_{x,i,j} - u_{x,(x_i,y_j)}$")
+        ax2.ticklabel_format(axis='z',style='sci',scilimits=(0,0))
+        ax2.set_zlabel("$e_{y,i,j}$")
+        ax2.set_xlabel("x")
+        ax2.set_ylabel("y")
         ax2.plot_trisurf(p[:, 0], p[:, 1], U[:, 1] - u(p.T)[1], cmap=cm.viridis)
         # ax.plot_trisurf(p[:, 0], p[:, 1], U)
         plt.savefig("figures/plot_homogeneous_dirichlet_elastic_y.pdf")
