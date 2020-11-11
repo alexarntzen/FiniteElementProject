@@ -1,12 +1,15 @@
 import numpy as np
+from scipy import linalg
 
 import femsolver.quadrature as qd
+
+import time
+
+
 
 
 def compose(f, g):
     return lambda x: f(g(x))
-
-
 def function_multiply(f, g):
     return lambda x: f(x) * g(x)
 
@@ -61,15 +64,15 @@ def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.e
                 Ha = lambda x: (B[0, alpha] + B[1:3, alpha] @ x)
                 F_a = qd.quadrature2D(p1, p2, p3, Nq, function_multiply(Ha, proj(f, da)))
                 F[index(element[alpha], da)] += F_a
-                index(element[alpha], da)
+
                 for beta in range(3):
                     for db in [0, 1]:
                         # finding A matrix
+                        
                         HaHb_derivative = lambda x: (Epsilon[da] @ B[1:3, alpha]).T @ C @ (Epsilon[db] @ B[1:3, beta])
                         I_ab = qd.quadrature2D(p1, p2, p3, 1, HaHb_derivative)
                         A[index(element[alpha], da), index(element[beta], db)] += I_ab
                         # apply neumann conditions if applicable
-
                         if [element[alpha], element[beta]] in neumann_edges.tolist():
                             vertex1, vertex2 = p[element[alpha]], p[element[beta]]
                             Hb = lambda x: B[0, beta] + B[1:3, beta] @ x
@@ -91,6 +94,13 @@ def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.e
 
 
 def solve_elastic(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.empty(0), Nq=4):
+    
+    t11 = time.time()
     A, F = get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g, neumann_edges, Nq)
-    U = np.linalg.solve(A, F)
-    return reshape_U(U)
+    td1 = time.time() - t11
+    
+    t12 = time.time()
+    U = linalg.solve(A, F)#",assume_a = 'sym')
+    td2 = time.time() - t12
+    
+    return reshape_U(U),td1,td2
