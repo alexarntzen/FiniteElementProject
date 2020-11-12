@@ -1,11 +1,12 @@
 import numpy as np
+from scipy import linalg
+import scipy.sparse as sp
+from scipy.sparse.linalg import spsolve
 
 import femsolver.quadrature as qd
 
-
 def compose(f, g):
     return lambda x: f(g(x))
-
 
 def function_multiply(f, g):
     return lambda x: f(x) * g(x)
@@ -38,7 +39,7 @@ Epsilon = (
 )
 
 
-def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.empty(0), Nq=4):
+def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.empty(0), Nq=1):
     n_bar = len(p)
     degrees = 2 * n_bar
     A = np.zeros((degrees, degrees))
@@ -61,15 +62,16 @@ def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.e
                 Ha = lambda x: (B[0, alpha] + B[1:3, alpha] @ x)
                 F_a = qd.quadrature2D(p1, p2, p3, Nq, function_multiply(Ha, proj(f, da)))
                 F[index(element[alpha], da)] += F_a
-                index(element[alpha], da)
+
                 for beta in range(3):
                     for db in [0, 1]:
                         # finding A matrix
+                        
                         HaHb_derivative = lambda x: (Epsilon[da] @ B[1:3, alpha]).T @ C @ (Epsilon[db] @ B[1:3, beta])
                         I_ab = qd.quadrature2D(p1, p2, p3, 1, HaHb_derivative)
                         A[index(element[alpha], da), index(element[beta], db)] += I_ab
+                        
                         # apply neumann conditions if applicable
-
                         if [element[alpha], element[beta]] in neumann_edges.tolist():
                             vertex1, vertex2 = p[element[alpha]], p[element[beta]]
                             Hb = lambda x: B[0, beta] + B[1:3, beta] @ x
@@ -90,7 +92,10 @@ def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.e
     return A, F
 
 
-def solve_elastic(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.empty(0), Nq=4):
+def solve_elastic(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.empty(0), Nq=1):
+    
     A, F = get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g, neumann_edges, Nq)
-    U = np.linalg.solve(A, F)
+    A,F = sp.csc_matrix(A),sp.csc_matrix(F).T
+    
+    U = sp.linalg.spsolve(A,F)
     return reshape_U(U)

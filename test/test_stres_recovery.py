@@ -122,17 +122,28 @@ class TestStressRecovery(unittest.TestCase):
         Sigma = get_naive_stress_recovery(U, p, tri, C)
 
         Sigma_exact = np.moveaxis(sigma(p.T, C), -1, 0)
+
+
         ax = fig.add_subplot(2, 1, 1, projection='3d')
+        if dim != [0,0]:
+            ax.view_init(30, 120)
+        ax.ticklabel_format(axis='x',style='sci')
         # ax.set_title("Numerical solution for Dirichlet")
         ax.set_zlabel("$\sigma_{i,j}$")
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
         ax.plot_trisurf(p[:, 0], p[:, 1], Sigma[:, dim[0], dim[1]], cmap=cm.viridis)
 
         ax2 = fig.add_subplot(2, 1, 2, projection='3d')
+        if dim != [0,0]:
+            ax2.view_init(30, 120)
         # ax2.set_title("Error")
         ax2.set_zlabel("$\sigma_{x,i,j} - \sigma_{x,(x_i,y_j)}$")
-        ax2.plot_trisurf(p[:, 0], p[:, 1], Sigma[:, dim[0], dim[1]]-Sigma_exact[:, dim[0], dim[1]], cmap=cm.viridis)
+        ax2.set_xlabel("x")
+        ax2.set_ylabel("y")
+        ax2.plot_trisurf(p[:, 0], p[:, 1], Sigma[:, dim[0], dim[1]] - Sigma_exact[:, dim[0], dim[1]], cmap=cm.viridis)
         # ax.plot_trisurf(p[:, 0], p[:, 1], U)
-        plt.savefig(f"figures/plot_homogeneous_dirichlet_elestic_sigma_dim_{dim[0]}_{dim[1]}.pdf")
+        plt.savefig(f"figures/plot_homogeneous_dirichlet_elastic_sigma_dim_{dim[0]}_{dim[1]}.pdf")
         plt.clf()
 
 
