@@ -99,6 +99,8 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
             # edge is lists of all nodes on the edge
             p, tri, edge = gp.getPlate(N)
             edge -= 1
+
+            #Using time.time() to find the runtime of solve_elastic()
             t1 = time.time()
             U = solve_elastic(p, tri, edge, C=get_C(E, v), f=get_f(E, v))
             t2 = time.time()

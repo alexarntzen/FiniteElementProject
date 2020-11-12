@@ -5,8 +5,6 @@ from scipy.sparse.linalg import spsolve
 
 import femsolver.quadrature as qd
 
-import time
-
 def compose(f, g):
     return lambda x: f(g(x))
 
@@ -96,13 +94,8 @@ def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.e
 
 def solve_elastic(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.empty(0), Nq=1):
     
-    t11 = time.time()
     A, F = get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g, neumann_edges, Nq)
     A,F = sp.csc_matrix(A),sp.csc_matrix(F).T
-    td1 = time.time() - t11
     
-    t12 = time.time()
     U = sp.linalg.spsolve(A,F)
-    td2 = time.time() - t12
-    
     return reshape_U(U)
