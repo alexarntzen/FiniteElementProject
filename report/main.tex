@@ -324,11 +324,11 @@ This is verified numerically by finding that $\textrm{rank}(\bm A) < n, \ \bm A 
 
 
 \subsection{Numerical integration}
-To evaluate the integrals in the weak formulation gaussian quadrature is used. This involves calculating weights $\rho_q$ for predetermined quadrature points $z_q$ on a suitable domain, then scaling the integral
+To evaluate the integrals in the weak formulation gaussian quadrature is used. For a spessific number of nodes $n+1$, we find the polynomal of degree $n+1$ orthogonal to all polynomals of lesser degree. The integrand is then interpolated using the zeroes of this orthogonal polynomal as nodes. For each node $z_q$ we already know the integral of the assosiated lagarange basis. Thus by the linearety of the integral we have predetermined wheights $\rho_q$  for each node $z_q$. Thus for on a domain $\hat{\Omega}$ we get the quadrature rule
 \begin{equation}
-    \int_{\hat{\Omega}} g \, d\hat{\Omega} = \sum_{q=1}^{N_q}{\rho_q g(z_q)}.
+    \int_{\hat{\Omega}} g \, d\hat{\Omega} = \sum_{q=0}^{n}{\rho_q g(z_q)}.
 \end{equation}
-% TODO : Her må det skrives mer. 
+For a domain $\Omega$ we can then scale the integral. Finnally it can be shown that this quadrature rulse has degree of exacteness $2n+1$.
 
 \subsection{Boundary conditions}
 As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on parts of the domain; $\restr{u}{\partial \Omega_D} =  0 $. This has not been considered in the given construction of $\bm A,\bm f$, which could be denoted as a proto problem. Hence, to find the solution $u \in X_h$ we will use the so called Big Number approach \cite[p. 16]{Lecture_Note_4} to enforce the Dirichlet boundary conditions. For nodes on the boundary $(x_i,y_i), i=n+1,\cdots\tilde n$ we set. 
@@ -344,7 +344,7 @@ which for a sufficiently small $\epsilon$ enforces the boundary conditions. In t
 
 Neumann boundary conditions are enforced in a natrual way by adding a term to $l$ as in Equation \eqref{neumann-conditions}.
 
-\section{Elasticity }
+\section{Elasticity } \label{seq-elasticity}
 \subsection{The elasticity equation}
 Let $\boldsymbol{u} : \Omega \rightarrow \mathbb{R}^2$ be the displacement of each point $\boldsymbol{x} \in \Omega$. Then the strain tensor is defined as 
 \begin{equation} \label{eq-strain-tensor}
@@ -517,7 +517,7 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
 
     We consider an analytical solution $u$ to the elasticity problem \eqref{eq-cauchy-momentum} with homogeneous Dirichlet boundary conditions.
 
-\begin{proposition}
+\begin{proposition} \label{prop-eleastic-test-case}
     $u: \mathbb{R}^2 \rightarrow \mathbb{R}$ such that
 
     \begin{equation} \bm u =
@@ -530,8 +530,8 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
     is a solution to the problem
 
     \begin{align*}
-        \nabla \bm \sigma (\bm u) &= -\bm f \, \text{in} \, \Omega \\
-        \bm u &= \bm 0 \, \text{on} \, \partial \Omega,
+        \nabla \bm \sigma (\bm u) &= -\bm f \ \text{in} \ \Omega \\
+        \bm u &= \bm 0 \ \text{on}  \ \partial  \Omega,
     \end{align*}
 
     where
@@ -665,13 +665,13 @@ The finite element method is used to solve the Poisson problem given by \eqref{p
 
 
 \subsection{Elasticity with Homogeneous Dirichlet boundary conditions}
+We implement the finite elemenet method for the elasticity problem described in Section \ref{seq-elasticity}. The method is applied to the boundary value problem described in Proposition \eqref{prop-eleastic-test-case}, and the first displacement component is shown in Figure \ref{solution-error-dirichlet-elastic-x}. 
+
+The recovered stress for each node is then calculated by averageing the stress over all neighbouring elements. For the previous numerical solution the recovered stress is shown in Figure \ref{solution-error-dirichlet-elastic-sigma-xx}. 
 
 
 
-TODO: Discuss: 1) numerical solution, 2) recovered stress, 3) convergence approximation using fine mesh, 4) ways to optimize the code.
-
-
-\begin{figure}[ht]
+\begin{figure}[ht]   
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
             \includegraphics[width=\linewidth]{figures/plot_homogeneous_dirichlet_elastic_x.pdf}
@@ -681,10 +681,10 @@ TODO: Discuss: 1) numerical solution, 2) recovered stress, 3) convergence approx
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
             \includegraphics[width=\linewidth]{figures/plot_homogeneous_dirichlet_elastic_sigma_dim_0_0.pdf}
-            \caption{Recovered stress $\sigma_{xx}$.}
-        \label{solution-error-dirichlet-elastic-y}
+            \caption{Recovered stress $\sigma_{xx}$, and the absolute error comared to the analytical solution}
+        \label{solution-error-dirichlet-elastic-sigma-xx}
     \end{subfigure}
-    \label{plot-elasticity}
+
     \caption{The elasticity problem problem solved on the unit square mesh with $N = 256$ nodes. The top figures displays displacement $u_x$ to the left and the recovered stress $\sigma_{xx}$ to the right. The bottom figures displays the error in the nodal points for displacement and stress, $e_{i,j} = U_{i,j} - u(x_i,y_j)$.}
 \end{figure}
 
@@ -716,7 +716,7 @@ By using the Time functionality of Python, one can find the runtime, the number 
 
 Below follows a discussion on different ways to optimize the implemented finite element solver aiming to reduce the runtime. First it should be noted that the matrix $A_h$ in Equation \ref{weak_formulation_matrix} is sparse and by using a sparse matrix storage format, including a sparse solver for linear systems, we can obtain a quite large reduction in computational time.
 
-By using a profiler to find the runtime of the different functions in the code, two remarks should be made. First, when a sparse solver is used for the linear system $A \bm u_h = \bm b_h$, the most time consuming task is the assembly of $A,\bm b_h$. Secondly, within the assembly of $A,\bm b_h$, approximating the integrals over the basis functions is done with gaussian quadrature. In both problems, we use linear basis functions and given the weak formulations, we obtain integrals over constants. In the elasticity problem we furthermore solve on a grid in which the elements have constant size. Both these facts could enable a solver where the element area is calculated once and then multiplied with the constant functions. This would yield a scheme that is less flexible to use with basis functions of higher order, however one would enable an increase in the speed of the computations. 
+By using a profiler to find the runtime of the different functions in the code, two remarks should be made. First, when a sparse solver is used for the linear system $A \bm u_h = \bm b_h$, the most time consuming task is the assembly of $A,\bm b_h$. Secondly, within the assembly of $A,\bm b_h$, approximating the integrals over the basis functions is done with gaussian quadrature. In both problems, we use linear basis functions and given the weak formulations, we obtain integrals over constants. In the elasticity problem we furthermore solve on a grid in which the elements have same shape fotated in different directions. Thus we could find the integral for each direction; drasticly reducing the number of oprations required to construct the $\bm A$ matrix. This would yield a scheme that is less flexible to use with basis functions of higher order, however one would enable an increase in the speed of the computations. 
    
 \section{Conclusion}
 The finite difference method described compares well with the analytic solution from Equation \eqref{analytical-solution}. For 1024 nodes, the maximal relative error is approximately $e_{rel,max} \approx 0.02$ for homogeneous Dirichlet boundary conditions, and approximately $e_{rel,max} \approx 0.03$ for mixed boundary conditions. In addition, the error decreases with  the number of nodes increases. This indicates that the method is convergent.

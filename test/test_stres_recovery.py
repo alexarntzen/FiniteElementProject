@@ -128,8 +128,7 @@ class TestStressRecovery(unittest.TestCase):
         if dim != [0,0]:
             ax.view_init(30, 120)
         ax.ticklabel_format(axis='x',style='sci')
-        # ax.set_title("Numerical solution for Dirichlet")
-        ax.set_zlabel("$\sigma_{i,j}$")
+        ax.set_zlabel("$\sigma_{xx,i,j}$")
         ax.set_xlabel("x")
         ax.set_ylabel("y")
         ax.plot_trisurf(p[:, 0], p[:, 1], Sigma[:, dim[0], dim[1]], cmap=cm.viridis)
@@ -137,8 +136,7 @@ class TestStressRecovery(unittest.TestCase):
         ax2 = fig.add_subplot(2, 1, 2, projection='3d')
         if dim != [0,0]:
             ax2.view_init(30, 120)
-        # ax2.set_title("Error")
-        ax2.set_zlabel("$\sigma_{x,i,j} - \sigma_{x,(x_i,y_j)}$")
+        ax2.set_zlabel("$\sigma_{xx,,i,j} - \sigma_{xx}(x_i,y_j)}$")
         ax2.set_xlabel("x")
         ax2.set_ylabel("y")
         ax2.plot_trisurf(p[:, 0], p[:, 1], Sigma[:, dim[0], dim[1]] - Sigma_exact[:, dim[0], dim[1]], cmap=cm.viridis)

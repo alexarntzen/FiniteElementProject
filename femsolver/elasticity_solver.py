@@ -107,7 +107,7 @@ def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.e
     return A, F
 
 
-def solve_elastic(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.empty(0), Nq=1):
+def solve_elastic(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.empty(0), Nq=4):
     A, F = get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g, neumann_edges, Nq)
     A, F = sp.csc_matrix(A), sp.csc_matrix(F).T
 
