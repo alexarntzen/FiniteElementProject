@@ -62,7 +62,7 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
     def test_compare_analytic(self):
         E = 5
         v = 0.1
-        N_list = 2 ** np.arange(2, 5)
+        N_list = 2 ** np.arange(2, 7)
         test_values = N_list ** 2 * 2
         rel_errors = np.zeros(len(N_list))
         u_max = 1
