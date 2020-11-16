@@ -1,6 +1,7 @@
 import numpy as np
 
 import femsolver.quadrature as qd
+from femsolver.finite_elements import IsogeometricLinearTriangle
 
 
 def compose(f, g):
@@ -11,42 +12,57 @@ def function_multiply(f, g):
     return lambda x: f(x) * g(x)
 
 
-def get_A_F(p, tri, dirichlet_edges, f, g=None, neumann_edges=np.empty(0),Nq=4):
-    n_bar = len(p)
+# Warning: meshing and plotting only supports the linear triangle
+# But this solver can use any valid shape functions in 2D
+def get_A_F(p, tri, dirichlet_edges, f, g=None, neumann_edges=np.empty(0), Nq=4,
+            finite_element=IsogeometricLinearTriangle, tri_u=None):
+    # find the shape functions for the reference triangle
+    if tri_u is None:
+        tri_u = tri
+    ref_element_geom = finite_element.geometry.ref_element
+    sf_geom = finite_element.geometry.shape_fun
+    sf_geom_jac = finite_element.geometry.shape_fun_jacobian
+    sf_u = finite_element.displacement.shape_fun
+    sf_u_jac = finite_element.displacement.shape_fun_jacobian
+    n_bar = len(np.unique(tri_u))
     A = np.zeros((n_bar, n_bar))
     F = np.zeros(n_bar)
 
-    for element in tri:
+    for element, element_u in zip(tri, tri_u):
+        # find expression for the dual basis for the reference element
+        X = p[element].T
 
-        # find coefficients for basis functions
-        XY = np.append(np.ones((3, 1)), p[element], axis=1)
-        C = np.linalg.solve(XY, np.identity(3))
+        def left_integrand(ksi):
+            left = sf_u_jac(ksi) @ np.linalg.inv(X @ sf_geom_jac(ksi))
+            jacobian_det = np.linalg.det(X @ sf_geom_jac(ksi))
+            return left @ left.T * jacobian_det
 
-        # coordinates of the nodes of the element
-        p1, p2, p3 = p[element[0]], p[element[1]], p[element[2]]
+        def right_integrand(ksi):
+            jacobian_det = np.linalg.det(X @ sf_geom_jac(ksi))
+            return f(X @ sf_geom(ksi)) * sf_u(ksi) * jacobian_det
 
-        # find a(phi_i,phi_j) and l(phi_i)
-        for alpha in range(3):
+        # finding A matrix
+        # A[element[alpha], element[beta]] += A_i[alpha,beta]
+        # For linear geometry and solution shape functions we can calculate this integral only once, then scale it.
+        A[np.ix_(element_u, element_u)] += qd.quadrature2D(*ref_element_geom, Nq=1, g=left_integrand)
 
-            # finding F vector
-            Ha = lambda x: (C[0, alpha] + C[1:3, alpha] @ x)
-            F_a = qd.quadrature2D(p1, p2, p3, Nq, function_multiply(Ha, f))
-            F[element[alpha]] += F_a
+        # Add load to F vector
+        F[element_u] += qd.quadrature2D(*ref_element_geom, Nq, right_integrand)
 
-            for beta in range(3):
-
-                # finding A matrix
-                HaHb_derivative = lambda x: C[1:3, alpha].T @ C[1:3, beta]
-                I_ab = qd.quadrature2D(p1, p2, p3, 1, HaHb_derivative)
-                A[element[alpha], element[beta]] += I_ab
-
-                # apply neumann conditions if applicable
+        # apply neumann conditions if applicable
+        for alpha in range(len(element)):
+            for beta in range(len(element)):
                 if [element[alpha], element[beta]] in neumann_edges.tolist():
-                    vertex1, vertex2 = p[element[alpha]], p[element[beta]]
-                    Hb = lambda x: (C[0, beta] + C[1:3, beta] @ x)
+                    vertex1, vertex2 = ref_element_geom[[alpha, beta]]
 
-                    F[element[alpha]] += qd.quadrature1D(vertex1, vertex2, Nq, function_multiply(Ha, g))
-                    F[element[beta]] += qd.quadrature1D(vertex1, vertex2, Nq, function_multiply(Hb, g))
+                    def right_integrand_neumann(ksi):
+                        coor_change = np.linalg.norm(X @ sf_geom_jac(ksi) @ (vertex2 - vertex1)
+                                                     ) / np.linalg.norm(vertex1 - vertex2)
+                        return sf_u(ksi) * g(X @ sf_geom(ksi)) * coor_change
+
+                    F[element_u] += qd.quadrature1D(vertex1, vertex2, Nq, g=right_integrand_neumann)
+
+                    # F[element[beta]] += qd.quadrature1D(vertex1, vertex2, Nq, function_multiply(H, g))
 
     # Applying dirichlet boundary conditions
     epsilon = 1e-100
@@ -58,7 +74,8 @@ def get_A_F(p, tri, dirichlet_edges, f, g=None, neumann_edges=np.empty(0),Nq=4):
     return A, F
 
 
-def solve(p, tri, dirichlet_edges, f, g=None, neumann_edges=np.empty(0),Nq=4):
-    A, F = get_A_F(p, tri, dirichlet_edges, f, g, neumann_edges,Nq,)
+def solve(p, tri, dirichlet_edges, f, g=None, neumann_edges=np.empty(0), Nq=4):
+    A, F = get_A_F(p, tri, dirichlet_edges, f, g, neumann_edges, Nq,
+            finite_element=IsogeometricLinearTriangle, tri_u=None )
     U = np.linalg.solve(A, F)
     return U
