@@ -49,8 +49,6 @@ def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.e
     sf_u = finite_element.displacement.shape_fun
     sf_u_jac = finite_element.displacement.shape_fun_jacobian
     n_bar = len(np.unique(tri_u))
-    A = np.zeros((n_bar, n_bar))
-    F = np.zeros(n_bar)
     degrees = 2 * n_bar
     A = np.zeros((degrees, degrees))
     F = np.zeros(degrees)
