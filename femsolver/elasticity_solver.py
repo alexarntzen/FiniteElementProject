@@ -110,12 +110,9 @@ def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.e
 
 
 def solve_elastic(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.empty(0), Nq=1):
-    print("start get:")
     A, F = get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g, neumann_edges, Nq)
     A, F = sp.csc_matrix(A), sp.csc_matrix(F).T
-    print("stop get:")
 
     U = sp.linalg.spsolve(A, F)
-    print("solved")
 
     return reshape_U(U)
