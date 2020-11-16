@@ -28,15 +28,15 @@ def proj(f, d):
     return lambda x: f(x)[d]
 
 
-epsilon1 = np.array( [
-        [1, 0],
-        [0, 0],
-        [0, 1]])
-epsilon2 = np.array( [
-        [0, 0],
-        [0, 1],
-        [1, 0]])
-Epsilon = np.array([epsilon1,epsilon2])
+epsilon1 = np.array([
+    [1, 0],
+    [0, 0],
+    [0, 1]])
+epsilon2 = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0]])
+Epsilon = np.array([epsilon1, epsilon2])
 
 
 def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.empty(0), Nq=4,
@@ -74,13 +74,13 @@ def get_elasticity_A_F(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.e
         for da in [0, 1]:
             for db in [0, 1]:
                 def left_integrand(ksi):
-
                     left = sf_u_jac(ksi) @ np.linalg.inv(X @ sf_geom_jac(ksi))
-                    inner = (Epsilon[da] @ left.T).T@ C @ Epsilon[db] @ left.T
+                    inner = (Epsilon[da] @ left.T).T @ C @ Epsilon[db] @ left.T
                     jacobian_det = np.linalg.det(X @ sf_geom_jac(ksi))
                     return inner * jacobian_det
 
-                A[np.ix_(index(element_u, da), index(element_u, db))] += qd.quadrature2D(*ref_element_geom, 1,  left_integrand)
+                A[np.ix_(index(element_u, da), index(element_u, db))] += qd.quadrature2D(*ref_element_geom, 1,
+                                                                                         left_integrand)
 
         # find a(phi_i,phi_j) and l(phi_i)
         for alpha in range(3):
