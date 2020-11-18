@@ -68,8 +68,10 @@ class TestStressRecovery(unittest.TestCase):
         N_list = 2 ** np.arange(2, 7)
         test_values = N_list ** 2 * 2
         print("\n\nComparing calculated stress to analytical stress:")
-        E = 5
+        E = 200
         v = 0.1
+
+
         for i, N in enumerate(N_list):
             p, tri, edge = getPlate(N)
             edge -= 1  # The edge indexes seem to be off
@@ -109,7 +111,7 @@ class TestStressRecovery(unittest.TestCase):
             self.assertAlmostEqual(rel_error, 0, delta=10 / test_values[i] ** 0.5)
 
     def test_plot_naive_stress_recovery(self):
-        N = 16
+        N = 32
         E = 5
         v = 0.1
         dim = [0, 0]

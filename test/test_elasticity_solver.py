@@ -98,6 +98,7 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         E = 5
         v = 0.1
 
+
         # Maximum N / minimum stepsize, h = 1/(2**i_max)
         i_max = 6
         N_finest = 2 ** i_max + 1
@@ -122,7 +123,8 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
             r = (N_finest - 1) // (N - 1)
             l_to_s_index = np.array([np.arange(0 + j * r * N_finest, N_finest + j * r * N_finest, r).tolist() for j in
                                      range(0, N)]).flatten()
-            max_error = np.max(np.abs(U_N[:, 1] - U_finest[:, 1][l_to_s_index]))
+            print(U_N.shape)
+            max_error = np.max(np.abs(U_N[:, 0] - U_finest[:, 0][l_to_s_index]))
             print(f"h = {1 / N:.2f}, max error: {max_error:.5f} run time: {td:.3f}")
             self.assertAlmostEqual(max_error, 0, delta=10 / test_values[i])
 
@@ -135,7 +137,7 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         error_convergence = np.polyfit(np.log(element_sizes[:-1]), np.log(rel_errors), deg=1)[0]
 
         plt.gcf().subplots_adjust(left=0.15)
-        plt.title("Relative deviance for different element sizes")
+        #plt.title("Relative deviance for different element sizes")
         plt.loglog(element_sizes[:-1], rel_errors, marker="o")
 
         plt.ylabel(" $|| U_f - U_h ||_{\infty}$")
@@ -146,7 +148,7 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         time_convergence = np.polyfit(np.log(element_sizes), np.log(run_times), deg=1)[0]
 
         plt.gcf().subplots_adjust(left=0.15)
-        plt.title("Runtime for different element sizes")
+        #plt.title("Runtime for different element sizes")
         plt.loglog(element_sizes, run_times, marker="o")
         plt.ylabel("Run time ($s$)")
         plt.xlabel("Element size, $h$")
@@ -155,13 +157,14 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
 
         convergence = np.column_stack((error_convergence, time_convergence))
 
-        np.savetxt("figures/convergence.dat", convergence, header="error_convergence \t time_convergence", fmt='%.2f',
+        np.savetxt("figures/convergence_elasticity.dat", convergence, header="error_convergence \t time_convergence", fmt='%.2f',
                    delimiter='\t')
 
     def test_plot(self):
-        N = 16
-        E = 5
+        N = 32
+        E = 200
         v = 0.1
+
         fig = plt.figure(figsize=plt.figaspect(2))
 
         p, tri, edge = gp.getPlate(N)
@@ -186,7 +189,9 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         ax2.set_ylabel("y")
         ax2.plot_trisurf(p[:, 0], p[:, 1], U[:, 0] - u(p.T)[0], cmap=cm.viridis)
         # ax.plot_trisurf(p[:, 0], p[:, 1], U)
+
         plt.savefig("figures/plot_homogeneous_dirichlet_elastic_x.pdf")
+
         plt.clf()
 
         # plotting 2nd dimention
@@ -205,6 +210,7 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         ax2.set_ylabel("y")
         ax2.plot_trisurf(p[:, 0], p[:, 1], U[:, 1] - u(p.T)[1], cmap=cm.viridis)
         # ax.plot_trisurf(p[:, 0], p[:, 1], U)
+
         plt.savefig("figures/plot_homogeneous_dirichlet_elastic_y.pdf")
         plt.clf()
 

@@ -42,7 +42,7 @@
  	\sisetup{output-decimal-marker  =  {,}} 	% Komma som desimalskilletegn (i steden for punktum).
  	\sisetup{separate-uncertainty = true}   	% Pluss-minus-form på usikkerhet (i steden for parentes). 
 
-\usepackage{booktabs}                     		% For å få tilgang til finere linjer (til bruk i tabeller og slikt).
+\usepackage{booktabs} % For å få tilgang til finere linjer (til bruk i tabeller og slikt).
 
 \usepackage[font=small,labelfont=bf]{caption}		% For justering av figurtekst og tabelltekst.
 
@@ -97,7 +97,7 @@
 
 \begin{frontmatter}
 
-\title{Element method project 1}
+\title{Poisson and elasticity problems solved with finite elements}
 \author[matematikk]{Håkon Noren}
 
 \author[matematikk]{Alexander Johan Arntzen }
@@ -118,12 +118,7 @@ The solutions are compared to the analytical solutions and for the elasticity pr
 \section{Introduction}
 The theory section describes two differential equations; the Poission problem, and the elasticity problem. The corresponding weak formulation is derived for both problems and projected into finite subspaces with the Galerkin approach, for the implementation of a finite element scheme. In order to test the schemes, two different test equations with known analytical solutions are described.
 
-Finally the 
-
-
-The Poisson problem with mixed homogenous Dirichlet and Neumann boundary conditions is introduced together with an analytical solution. 
-The weak formulation of this problem is then derived together with the Galerkin projection. 
-The finite dimetional problem is then solved numerically for two cases. The result is compared to the corresponding analytic solution. 
+Finally the numerical solutions are plotted before numerical convergence and error is discussed.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The Poisson problem}
@@ -557,7 +552,7 @@ By Hooks law \eqref{hooks-law} have that $C \bar{\epsilon} = \bar{\sigma}$ where
     \end{bmatrix},
 \end{equation*}
 
-furthermore, as the components of $\bm u$ are identical we write $\bm u = [u,u]^T$ where we denote derivatives by $\frac{\partial u}{\partial x} = u_x, \, \frac{\partial^2 u}{\partial x \partial y} = u_{xy} \cdots$,
+\noindent where Youngs modulus $E$ and the Poisson ration $\nu$ is material specific constants describing stiffness and the ratio of compression vs expansion of the material being modelled. As the components of $\bm u$ are identical we write $\bm u = [u,u]^T$ where we denote derivatives by $\frac{\partial u}{\partial x} = u_x, \, \frac{\partial^2 u}{\partial x \partial y} = u_{xy} \cdots$,
 we get
 
 \begin{align}
@@ -672,7 +667,7 @@ The finite element method is used to solve the Poisson problem given by \eqref{p
 
 
 \subsection{Elasticity with Homogeneous Dirichlet boundary conditions}
-We implement the finite elemenet method for the elasticity problem described in Section \ref{seq-elasticity}. The method is applied to the boundary value problem described in Proposition \eqref{prop-eleastic-test-case}, and the first displacement component is shown in Figure \ref{solution-error-dirichlet-elastic-x}. 
+We implement the finite elemenet method for the elasticity problem described in Section \ref{seq-elasticity}. The method is applied to the boundary value problem described in Proposition \eqref{prop-eleastic-test-case}, and the first displacement component is shown in Figure \ref{solution-error-dirichlet-elastic-x}. Youngs modulus $E$ and the Poisson ration $\nu$ could be specified as to represent a given material. In this case we set $E = 200$ and $\nu = 0.30$ which describe properties of steel. 
 
 The recovered stress for each node is then calculated by averageing the stress over all neighbouring elements. For the previous numerical solution the recovered stress is shown in Figure \ref{solution-error-dirichlet-elastic-sigma-xx}. 
 
@@ -699,7 +694,7 @@ The recovered stress for each node is then calculated by averageing the stress o
 
 Assuming the analytical solution to \eqref{weak_formulation_elastic} is unknown, a way to estimate the convergence rate is to solve \eqref{weak_formulation_matrix} using very small elements with size $h_{fine}$, finding the corresponding numerical solution $\bm U_f$, and estimate the error by finding solutions with larger element sizes $h_i >> h_{fine}$, yielding solutions $\bm U_{h,i}$. Hence we find the estimated error in max norm $\hat e_{i,r} = \|U_{f,r} - U_{h,i,r} \|_{\infty}$, where $r\in \{x,y\}$. Let $h_i \in \{\frac{1}{2^i}\}_{i=1}^4$, and $h_{fine} = \frac{1}{2^6}$ yielding $\{\hat e_{i,r}\}_{i=1}^4$. The max norm is used, because, if the $l_2$ norm was used, one would experience a slight increase in the error with increasing number of nodes. Finding the slope of the linear regression curve of the points $\{\log h_i,\log  \hat e_{i,r}\}_{i=1}^4$, we obtain the rate of convergence for our numerical scheme. 
 
-By using the Time functionality of Python, one can find the runtime, the number of seconds it takes to run the elasticity solver, $t_i$ given element size $h_i$. A plot of $\{\log h_i,\log \hat e_{i,x}\}_{i=1}^4$ is found in Figure \ref{error-convergence-elastic}, and we find the numerical convergence rate given the max norm to be $2.46$. Furthemore the runtime over the different element sizes is found in Figure \ref{time-convergence-elastic} and the slope of the linear regression curve for the runtime is $-2.38$, meaning we get increasing runtime with decreasing element size, which is as expected. It should also be noted that since we solve the equation for a two dimensional vectorfield on a two dimensional grid, reducing the element size (in one dimension), increases the number of nodes quadratically, as $h_i = \frac{1}{2N_{1D}} = \frac{1}{4N_{2D}^2}$.
+By using the Time functionality of Python, one can find the runtime, the number of seconds it takes to run the elasticity solver, $t_i$ given element size $h_i$. A plot of $\{\log h_i,\log \hat e_{i,x}\}_{i=1}^4$ is found in Figure \ref{error-convergence-elastic}, and we find the numerical convergence rate given the max norm to be $2.46$. Furthemore the runtime over the different element sizes is found in Figure \ref{time-convergence-elastic} and the slope of the linear regression curve for the runtime is $-2.49$, meaning we get increasing runtime with decreasing element size, which is as expected. It should also be noted that since we solve the equation for a two dimensional vectorfield on a two dimensional grid, reducing the element size (in one dimension), increases the number of nodes quadratically, as $h_i = \frac{1}{2N_{1D}} = \frac{1}{4N_{2D}^2}$.
 
 \begin{figure}[t]
     \begin{subfigure}[t]{0.5\linewidth}
@@ -726,7 +721,10 @@ Below follows a discussion on different ways to optimize the implemented finite 
 By using a profiler to find the runtime of the different functions in the code, two remarks should be made. First, when a sparse solver is used for the linear system $A \bm u_h = \bm b_h$, the most time consuming task is the assembly of $A,\bm b_h$. Secondly, within the assembly of $A,\bm b_h$, approximating the integrals over the basis functions is done with gaussian quadrature. In both problems, we use linear basis functions and given the weak formulations, we obtain integrals over constants. In the elasticity problem we furthermore solve on a grid in which the elements have same shape rotated in different directions. Thus we could find the integral for each direction; drasticly reducing the number of operations required to construct the $A$ matrix. This would yield a scheme that is less flexible to use with basis functions of higher order, however one would enable an increase in the speed of the computations. 
    
 \section{Conclusion}
-The finite difference method described compares well with the analytic solution from Equation \eqref{analytical-solution}. For 1024 nodes, the maximal relative error is approximately $e_{rel,max} \approx 0.02$ for homogeneous Dirichlet boundary conditions, and approximately $e_{rel,max} \approx 0.03$ for mixed boundary conditions. In addition, the error decreases with  the number of nodes increases. This indicates that the method is convergent.
+
+Using the finite difference method for finding approximate solutions to the Poisson equation, solutions compares well with the analytic solution from Equation \eqref{analytical-solution}. For 1024 nodes, the maximal relative error is approximately $e_{rel,max} \approx 0.02$ for homogeneous Dirichlet boundary conditions, and approximately $e_{rel,max} \approx 0.03$ for mixed boundary conditions. In addition, the error decreases with the number of nodes increases. This indicates that the method is convergent.
+
+For the elasticity problem, the error was approximated by comparing solutions on a fine mesh with coarser meshes. In this case a numerical convergence rate of $2.46$ was observed, when decreasing the element size, indicating that the method is convergent. However, decreasing error comes with the cost of increased computational time, where the slope of the logarithmic plot (Figure \ref{time-convergence-elastic}) of time usage for different stepsizes was found to be approximately $-2.49$. This indicates that for this scheme, used to solve the elasticity problem, error decreases at almost the same rate as computational time increases, when decreasing the element size.
 	
 
 \bibliography{ref}
