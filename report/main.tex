@@ -106,9 +106,9 @@
 
 
 \begin{abstract}
-The Poisson problem is solved numerically with a finite element metod in two cases with different boundary conditions.
-One case with homogeneous Dirichlet boundary conditions and one case with mixed Neumann and Dirichlet boundary conditions. 
-The solutions are compared to the analytic solution. The maximal error decreases with the number of degrees freedom and indicates that the metod is convergent. 
+This report describes the implementation and performance of a finite element method used to solve differential equations in two dimensions. The Poisson problem is solved, first with homogeneous Dirichlet boundary conditions, secondly with mixed Neumann and Dirichlet boundary conditions. Furthermore numerical solutions of the elasticity problem, modelling displacement and stress, are described.
+
+The solutions are compared to the analytical solutions and for the elasticity problem the numerical convergence rate is reported.
 \end{abstract}
 
 \end{frontmatter}
@@ -116,14 +116,19 @@ The solutions are compared to the analytic solution. The maximal error decreases
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
+The theory section describes two differential equations; the Poission problem, and the elasticity problem. The corresponding weak formulation is derived for both problems and projected into finite subspaces with the Galerkin approach, for the implementation of a finite element scheme. In order to test the schemes, two different test equations with known analytical solutions are described.
+
+Finally the 
+
+
 The Poisson problem with mixed homogenous Dirichlet and Neumann boundary conditions is introduced together with an analytical solution. 
 The weak formulation of this problem is then derived together with the Galerkin projection. 
 The finite dimetional problem is then solved numerically for two cases. The result is compared to the corresponding analytic solution. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Theory}
+\section{The Poisson problem}
 
-\subsection{Problem}
+\subsection{Boundary value problem}
 
 We consider the Poisson problem with mixed homogenous Dirichlet and Neumann boundary conditions. 
 
@@ -322,14 +327,6 @@ The same is then true for the solution of the discretized problem $\bm u$ and he
 This is verified numerically by finding that $\textrm{rank}(\bm A) < n, \ \bm A \in \mathbb{R}^{n \times n}$.
 \end{remark}
 
-
-\subsection{Numerical integration}
-To evaluate the integrals in the weak formulation gaussian quadrature is used. For a spessific number of nodes $n+1$, we find the polynomal of degree $n+1$ orthogonal to all polynomals of lesser degree. The integrand is then interpolated using the zeroes of this orthogonal polynomal as nodes. For each node $z_q$ we already know the integral of the assosiated lagarange basis. Thus by the linearety of the integral we have predetermined wheights $\rho_q$  for each node $z_q$. Thus for on a domain $\hat{\Omega}$ we get the quadrature rule
-\begin{equation}
-    \int_{\hat{\Omega}} g \, d\hat{\Omega} = \sum_{q=0}^{n}{\rho_q g(z_q)}.
-\end{equation}
-For a domain $\Omega$ we can then scale the integral. Finnally it can be shown that this quadrature rulse has degree of exacteness $2n+1$.
-
 \subsection{Boundary conditions}
 As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on parts of the domain; $\restr{u}{\partial \Omega_D} =  0 $. This has not been considered in the given construction of $\bm A,\bm f$, which could be denoted as a proto problem. Hence, to find the solution $u \in X_h$ we will use the so called Big Number approach \cite[p. 16]{Lecture_Note_4} to enforce the Dirichlet boundary conditions. For nodes on the boundary $(x_i,y_i), i=n+1,\cdots\tilde n$ we set. 
 
@@ -344,8 +341,9 @@ which for a sufficiently small $\epsilon$ enforces the boundary conditions. In t
 
 Neumann boundary conditions are enforced in a natrual way by adding a term to $l$ as in Equation \eqref{neumann-conditions}.
 
-\section{Elasticity } \label{seq-elasticity}
-\subsection{The elasticity equation}
+\section{The elasticity problem } \label{seq-elasticity}
+
+\subsection{Boundary value problem}
 Let $\boldsymbol{u} : \Omega \rightarrow \mathbb{R}^2$ be the displacement of each point $\boldsymbol{x} \in \Omega$. Then the strain tensor is defined as 
 \begin{equation} \label{eq-strain-tensor}
     \boldsymbol{\epsilon}(\boldsymbol{u}) = \frac{1}{2}(\nabla \boldsymbol{u} + \nabla \boldsymbol{u}^\intercal)
@@ -385,7 +383,7 @@ where $\boldsymbol{f}$ is the force per area. Applying boundary conditions
     \label{elasticity-bc}
 \end{align}
 result in the corresponding boundary value problem. 
-\subsection{The weak formulation}
+\subsection{Weak formulation}
 \begin{proposition}
     % Skal vi ha med lifing functions her ??. Ikke enda?
     The weak formulation of \eqref{eq-cauchy-momentum} with homogeneous dirichlet conditions is given by:  
@@ -438,13 +436,13 @@ where the Neumann boundary conditions where incooroprated into the last step.
 Since $\bm v$ was arbitrary the weak formulation follows. Furthermore, all $\bm u$ and $\bm v$ must belong to a space such that $\boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u) \in {L^1}(\Omega)$. By linearity of the integral then $\nabla \bm u$ and $\nabla \bm v$ must be in $\left[{L^2}(\Omega)\right]^{2 \times 2}$; thus $\bm u$ and $\bm v$ must be in $ H^1_{\partial \Omega_D } \times H^1_{\partial \Omega_D } $
 \end{proof}
 \begin{remark}
-    The case for nonhomogenious Dirichlet boundary conditions can be solved by lifting functions.
+    The case for nonhomogenous Dirichlet boundary conditions can be solved by lifting functions.
 \end{remark}
 \subsection{Galerkin projection}
-Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
+Again, lets find finite dimesional solutions $u_h \in X_h \subset X$
  %TODO: Comment that \varphi is piecewise linear
 \begin{proposition}
-    The finite dimentional equivalent of the weak formulation given in Proposition 4 is given by
+    The finite dimensional equivalent of the weak formulation given in Proposition 4 is given by
 
 
         \begin{align}
@@ -484,10 +482,10 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
 
 \begin{proof}
     As $\bm u_h,\bm v_h \in X_h$ are projections into a finite subspace, we can write the functions as an expansion of basis functions $\bm \varphi$. Hence we can write 
-    $\bm v_h = \bm \varphi_j$ and $\bm u_h = \sum_i u_i \bm \varphi_i, u_i \in \mathbb{R}$. As $\bar \epsilon( \cdot )$ is linear we get equations for $j = 1,\cdots,n$ on the form
+    $\bm v_h = \bm \varphi_j$ and $\bm{ \hat u_h} = \sum_i u_i \bm \varphi_i, u_i \in \mathbb{R}$. As $\bar \epsilon( \cdot )$ is linear we get equations for $j = 1,\cdots,n$ on the form
 
     \begin{align*}
-        a(\bm u_h,\bm v_h) &= \int_\Omega{ \boldsymbol{\overline \epsilon}(\bm v_h)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)} \,dA  \\
+        a(\bm{ \hat u_h},\bm v_h) &= \int_\Omega{ \boldsymbol{\overline \epsilon}(\bm v_h)^\intercal C\boldsymbol{\overline \epsilon}(\bm{ \hat u_h})} \,dA  \\
         &=\sum_i u_i  \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_j)^\intercal C  \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_i)} \,dA \\
         &= \sum_i u_i a(\bm \varphi_j,\bm \varphi_i) \\
         &= A_j \bm u_h \\
@@ -512,17 +510,17 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
 \end{proof}
 
 
-\subsection{Test case}
+\subsection{Analytical solution}
 
 
     We consider an analytical solution $u$ to the elasticity problem \eqref{eq-cauchy-momentum} with homogeneous Dirichlet boundary conditions.
 
 \begin{proposition} \label{prop-eleastic-test-case}
-    $u: \mathbb{R}^2 \rightarrow \mathbb{R}$ such that
+    $u: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ such that
 
     \begin{equation} \bm u =
         \begin{bmatrix}
-            (x^2-1)(y^2-1) \\
+            (x^2-1)(y^2-1), \\
             (x^2-1)(y^2-1)
         \end{bmatrix},
     \end{equation}
@@ -539,7 +537,7 @@ Again, lets find finite dimetional solutions $u_h \in X_h \subset X$
     \begin{align*}
         \bm f = \frac{E}{1-\nu^2}   
         \begin{bmatrix}
-            -2y^2 + x^2(\nu - 1) -2xy(\nu +1) + 3 - \nu \\
+            -2y^2 + x^2(\nu - 1) -2xy(\nu +1) + 3 - \nu, \\
             -2x^2 + y^2(\nu - 1) -2xy(\nu +1) + 3 - \nu 
         \end{bmatrix}^T,
     \end{align*}
@@ -559,17 +557,17 @@ By Hooks law \eqref{hooks-law} have that $C \bar{\epsilon} = \bar{\sigma}$ where
     \end{bmatrix},
 \end{equation*}
 
-furthermore, as both components of $\bm u$ are identical we write $\bm u = [u,u]^T$ where we denote derivatives by $\frac{\partial u}{\partial x} = u_x, \, \frac{\partial^2 u}{\partial x \partial y} = u_{xy} \cdots$,
+furthermore, as the components of $\bm u$ are identical we write $\bm u = [u,u]^T$ where we denote derivatives by $\frac{\partial u}{\partial x} = u_x, \, \frac{\partial^2 u}{\partial x \partial y} = u_{xy} \cdots$,
 we get
 
 \begin{align}
     \nabla\bm\sigma(u) &= 
     c\begin{bmatrix}
-        u_{xx} + u_{yy}\frac{1-\nu}{2} + u_{xy}(\nu + \frac{1-\nu}{2})\\
+        u_{xx} + u_{yy}\frac{1-\nu}{2} + u_{xy}(\nu + \frac{1-\nu}{2}),\\
         u_{yy} + u_{xx}\frac{1-\nu}{2} + u_{xy}(\nu + \frac{1-\nu}{2})
     \end{bmatrix}^T\\
     &= c\begin{bmatrix}
-        2y^2 - x^2(\nu - 1) +2xy(\nu +1) - 3 + \nu \\
+        2y^2 - x^2(\nu - 1) +2xy(\nu +1) - 3 + \nu, \\
         2x^2 - y^2(\nu - 1) +2xy(\nu +1) - 3 + \nu
     \end{bmatrix}^T\\
     &= -\bm f^T.
@@ -631,7 +629,16 @@ For the elasicity problem we use a plate mesh generated by giving the number of 
     while the bottom figure displays the error in the nodal points.}
 \end{figure}
 
-\subsection{Homogeneous Dirichlet boundary conditions}
+
+\subsection{Numerical integration}
+To evaluate the integrals in the weak formulation gaussian quadrature is used. For a spessific number of nodes $n+1$, we find the polynomal of degree $n+1$ orthogonal to all polynomals of lesser degree. The integrand is then interpolated using the zeroes of this orthogonal polynomal as nodes. For each node $z_q$ we already know the integral of the assosiated lagarange basis. Thus by the linearety of the integral we have predetermined wheights $\rho_q$  for each node $z_q$. Thus on a domain $\hat{\Omega}$ we get the quadrature rule
+\begin{equation}
+    \int_{\hat{\Omega}} g \, d\hat{\Omega} = \sum_{q=0}^{n}{\rho_q g(z_q)}.
+\end{equation}
+For a domain $\Omega$ we can then scale the integral. Finally it can be shown that this quadrature rulse has degree of exacteness $2n+1$.
+
+
+\subsection{Poisson with Homogeneous Dirichlet boundary conditions}
 The finite element method described is tested on the Poisson problem with homogeneous Dirichlet conditions and $f$ given by Equation \eqref{f-analytic}. 
 By Proposition \ref{prop-analytical-solution} the solution is known and is used as a reference. 
 Numerical experiments with increasing degrees of freedom results in lower relative maximal error, as seen in Figure \ref{convergence-dirichlet}. The numerical solution for $N = 1024$ nodes is shown in Figure \ref{solution-error-dirichlet}
@@ -642,7 +649,7 @@ The relative maximal error is given by
     e_{rel,max} = \max_{1\leq i \leq n} \frac{|e_i|}{\| u(x,y)\|_{\infty}} = \max_{1\leq i \leq n} |e_i|.
 \end{equation*}
 
-\subsection{Mixed boundary conditions}
+\subsection{Poisson with mixed boundary conditions}
 The finite element method is used to solve the Poisson problem given by \eqref{poission-problem} with $f$ given by Equation \eqref{f-analytic}, $g$ given by Equation \eqref{g-analytic} and $\partial \Omega_N = \{ x,y \in \partial \Omega : y> 0\}$. By Proposition \ref{analytical-solution-neumann} the solution is the is the same as for Homogeneous Dirichlet boundary conditions. Numerical experiments with increasing degrees of freedom results in lower relative maximal error, as seen in Figure \ref{convergence-neumann}. The numerical solution for $N = 1024$ nodes is plotted in Figure \ref{solution-error-mixed} together with a plot of how the error $e_{i,j} = U_{i,j} - u(x_i,y_j)$ is located on our domain $\Omega$. 
 
 \begin{figure}[t]
@@ -675,30 +682,30 @@ The recovered stress for each node is then calculated by averageing the stress o
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
             \includegraphics[width=\linewidth]{figures/plot_homogeneous_dirichlet_elastic_x.pdf}
-            \caption{Solution $u_x$ and error of the elasticity problem with Dirichlet boundary conditions.}
+            \caption{One component of the displacement, $u_x$ and error of the elasticity problem with Dirichlet boundary conditions for $N_{1D} = 16$.}
         \label{solution-error-dirichlet-elastic-x}
     \end{subfigure}\qquad
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
             \includegraphics[width=\linewidth]{figures/plot_homogeneous_dirichlet_elastic_sigma_dim_0_0.pdf}
-            \caption{Recovered stress $\sigma_{xx}$, and the absolute error comared to the analytical solution}
+            \caption{One component of the recovered stress, $\sigma_{xx}$, and the absolute error comared to the analytical solution, for $N_{1D} = 16$.}
         \label{solution-error-dirichlet-elastic-sigma-xx}
     \end{subfigure}
 
-    \caption{The elasticity problem problem solved on the unit square mesh with $N = 256$ nodes. The top figures displays displacement $u_x$ to the left and the recovered stress $\sigma_{xx}$ to the right. The bottom figures displays the error in the nodal points for displacement and stress, $e_{i,j} = U_{i,j} - u(x_i,y_j)$.}
+    \caption{The elasticity problem problem solved on the unit square mesh with $N = 256$ nodes. The top figures displays displacement $u_x$ to the left and the recovered stress $\sigma_{xx}$ to the right. The bottom figures displays the error in the nodal points for displacement and stress. For the displacement, we have the error $e_{x,i,j} = U_{x,i,j} - u_x(x_i,y_j)$.}
 \end{figure}
 
 \subsection*{Measure of performance}
 
-Assuming the analytical solution to \eqref{weak_formulation_elastic} is unknown, a way to estimate the convergence rate is to solve \eqref{weak_formulation_matrix} using very small elements with size $h_{fine}$, finding $U_f$, and estimate the error by finding solutions with larger element sizes $h_i >> h_{fine}$, yielding solutions $U_{h,i}$. Hence we find the estimated error in max norm $\hat e_i = \|U_f - U_{h,i} \|_{\infty}$. Let $h_i \in \{\frac{1}{2^i}\}_{i=1}^4$, and $h_{fine} = \frac{1}{2^6}$ yielding $\{e_i\}_{i=1}^4$. The max norm is used, because, if the $l_2$ norm was used, one would experience a slight increase in the error with increasing number of nodes. Finding the slope of the linear regression curve of the points $\{\log h_i,\log\hat e_i\}_{i=1}^4$, we obtain the rate of convergence for our numerical scheme. 
+Assuming the analytical solution to \eqref{weak_formulation_elastic} is unknown, a way to estimate the convergence rate is to solve \eqref{weak_formulation_matrix} using very small elements with size $h_{fine}$, finding the corresponding numerical solution $\bm U_f$, and estimate the error by finding solutions with larger element sizes $h_i >> h_{fine}$, yielding solutions $\bm U_{h,i}$. Hence we find the estimated error in max norm $\hat e_{i,r} = \|U_{f,r} - U_{h,i,r} \|_{\infty}$, where $r\in \{x,y\}$. Let $h_i \in \{\frac{1}{2^i}\}_{i=1}^4$, and $h_{fine} = \frac{1}{2^6}$ yielding $\{\hat e_{i,r}\}_{i=1}^4$. The max norm is used, because, if the $l_2$ norm was used, one would experience a slight increase in the error with increasing number of nodes. Finding the slope of the linear regression curve of the points $\{\log h_i,\log  \hat e_{i,r}\}_{i=1}^4$, we obtain the rate of convergence for our numerical scheme. 
 
-By using the Time functionality of Python, one can find the runtime, the number of seconds it takes to run the elasticity solver, $t_i$ given element size $h_i$. A plot of $\{\log h_i,\log\hat e_i\}_{i=1}^4$ is found in Figure \ref{error-convergence-elastic}, and we find the convergence rate given the max norm to be $2.46$. Furthemore the runtime over the different element sizes is found in Figure \ref{time-convergence-elastic} and the slope of the linear regression curve for the runtime is $-2.27$, meaning we get increasing runtime with decreasing element size, which is as expected. It should also be noted that since we solve the equation for a two dimensional vectorfield on a two dimensional grid, reducing the element size (in one dimension), increases the number of nodes quadratically, as $h_i = \frac{1}{2N_{1D}} = \frac{1}{4N_{2D}^2}$.
+By using the Time functionality of Python, one can find the runtime, the number of seconds it takes to run the elasticity solver, $t_i$ given element size $h_i$. A plot of $\{\log h_i,\log \hat e_{i,x}\}_{i=1}^4$ is found in Figure \ref{error-convergence-elastic}, and we find the numerical convergence rate given the max norm to be $2.46$. Furthemore the runtime over the different element sizes is found in Figure \ref{time-convergence-elastic} and the slope of the linear regression curve for the runtime is $-2.38$, meaning we get increasing runtime with decreasing element size, which is as expected. It should also be noted that since we solve the equation for a two dimensional vectorfield on a two dimensional grid, reducing the element size (in one dimension), increases the number of nodes quadratically, as $h_i = \frac{1}{2N_{1D}} = \frac{1}{4N_{2D}^2}$.
 
 \begin{figure}[t]
     \begin{subfigure}[t]{0.5\linewidth}
             \centering
                 \includegraphics[width=\linewidth]{figures/decreasing_h_error.pdf}
-            \caption{Relative deviance $\|U_f - U_{h,i}\|_{\infty}$ between fine mesh $h_f$ and coarser meshes $h_i$.}
+            \caption{Error approximation $\hat e_{i,x} = \|U_{f,x} - U_{h,i,x}\|_{\infty}$ between fine mesh with size $h_f$ and coarser meshes with sizes $h_i$.}
             \label{error-convergence-elastic}
         \end{subfigure}\qquad
         \begin{subfigure}[t]{0.5\linewidth}
@@ -716,7 +723,7 @@ By using the Time functionality of Python, one can find the runtime, the number 
 
 Below follows a discussion on different ways to optimize the implemented finite element solver aiming to reduce the runtime. First it should be noted that the matrix $A_h$ in Equation \ref{weak_formulation_matrix} is sparse and by using a sparse matrix storage format, including a sparse solver for linear systems, we can obtain a quite large reduction in computational time.
 
-By using a profiler to find the runtime of the different functions in the code, two remarks should be made. First, when a sparse solver is used for the linear system $A \bm u_h = \bm b_h$, the most time consuming task is the assembly of $A,\bm b_h$. Secondly, within the assembly of $A,\bm b_h$, approximating the integrals over the basis functions is done with gaussian quadrature. In both problems, we use linear basis functions and given the weak formulations, we obtain integrals over constants. In the elasticity problem we furthermore solve on a grid in which the elements have same shape fotated in different directions. Thus we could find the integral for each direction; drasticly reducing the number of oprations required to construct the $\bm A$ matrix. This would yield a scheme that is less flexible to use with basis functions of higher order, however one would enable an increase in the speed of the computations. 
+By using a profiler to find the runtime of the different functions in the code, two remarks should be made. First, when a sparse solver is used for the linear system $A \bm u_h = \bm b_h$, the most time consuming task is the assembly of $A,\bm b_h$. Secondly, within the assembly of $A,\bm b_h$, approximating the integrals over the basis functions is done with gaussian quadrature. In both problems, we use linear basis functions and given the weak formulations, we obtain integrals over constants. In the elasticity problem we furthermore solve on a grid in which the elements have same shape rotated in different directions. Thus we could find the integral for each direction; drasticly reducing the number of operations required to construct the $A$ matrix. This would yield a scheme that is less flexible to use with basis functions of higher order, however one would enable an increase in the speed of the computations. 
    
 \section{Conclusion}
 The finite difference method described compares well with the analytic solution from Equation \eqref{analytical-solution}. For 1024 nodes, the maximal relative error is approximately $e_{rel,max} \approx 0.02$ for homogeneous Dirichlet boundary conditions, and approximately $e_{rel,max} \approx 0.03$ for mixed boundary conditions. In addition, the error decreases with  the number of nodes increases. This indicates that the method is convergent.
