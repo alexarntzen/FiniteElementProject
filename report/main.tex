@@ -575,7 +575,6 @@ we get
 On the boundary $\partial \Omega = (-1,1)\times(-1,1)$ we get $\bm u(x,y) = \bm 0 \ \forall \ (x,y) \in \partial \Omega$.
 Hence we find that $\bm u$ fullfills all requirements in proposition \ref{prop-eleastic-test-case}.  
 \end{proof}
-    
 
 
 \section{Numerical experiments}
@@ -696,7 +695,7 @@ The recovered stress for each node is then calculated by averageing the stress o
 \subsection{Performance of linear elasticity solver}
 Assuming the analytical solution to \eqref{weak_formulation_elastic} is unknown, a way to estimate the convergence rate is to solve \eqref{weak_formulation_matrix} using very small elements with size $h_{fine}$, finding the corresponding numerical solution $\bm U_f$, and estimate the error by finding solutions with larger element sizes $h_i >> h_{fine}$, yielding solutions $\bm U_{h,i}$. Hence we find the estimated error in max norm $\hat e_{i,r} = \|U_{f,r} - U_{h,i,r} \|_{\infty}$, where $r\in \{x,y\}$. Let $h_i \in \{\frac{1}{2^i}\}_{i=1}^4$, and $h_{fine} = \frac{1}{2^6}$ yielding $\{\hat e_{i,r}\}_{i=1}^4$. The max norm is used, because, if the $l_2$ norm was used, one would experience a slight increase in the error with increasing number of nodes. Finding the slope of the linear regression curve of the points $\{\log h_i,\log  \hat e_{i,r}\}_{i=1}^4$, we obtain the rate of convergence for our numerical scheme. 
 
-By using the Time functionality of Python, one can find the runtime, the number of seconds it takes to run the elasticity solver, $t_i$ given element size $h_i$. A plot of $\{\log h_i,\log \hat e_{i,x}\}_{i=1}^4$ is found in Figure \ref{error-convergence-elastic}, and we find the numerical convergence rate given the max norm to be $2.46$. Furthemore the runtime of system assembly and system solving for the different element sizes is found in Figure \ref{time-convergence-elastic}. We observe that the LU factorization has the highest time complexity which is as expected. It should also be noted that since we solve the equation for a two dimensional vectorfield on a two dimensional grid, reducing the element size (in one dimension), increases the number of nodes quadratically, as $h_i = \frac{1}{2N_{1D}} = \frac{1}{4N_{2D}^2}$.
+By using the Time functionality of Python, one can find the runtime, the number of seconds it takes to run the elasticity solver, $t_i$ given element size $h_i$. A plot of $\{\log h_i,\log \hat e_{i,x}\}_{i=1}^4$ is found in Figure \ref{error-convergence-elastic}, and we find the numerical convergence rate given the max norm to be $2.46$. Furthemore the runtime of system assembly and system solving for the different element sizes is found in Figure \ref{time-convergence-elastic}. We observe that the LU factorization has the highest time complexity which is as expected. It should also be noted that since we solve the equation for a two dimensional vectorfield on a two dimensional grid, reducing the element size (in one dimension), increases the number of nodes quadratically.
 
 \begin{figure}[t]
     \begin{subfigure}[t]{0.5\linewidth}
@@ -725,8 +724,6 @@ Secondly, within the assembly of $A,\bm b_h$, approximating the integrals over t
 Using the finite difference method for finding approximate solutions to the Poisson equation, solutions compares well with the analytic solution from Equation \eqref{analytical-solution}. For 1024 nodes, the maximal relative error is approximately $e_{rel,max} \approx 0.02$ for homogeneous Dirichlet boundary conditions, and approximately $e_{rel,max} \approx 0.03$ for mixed boundary conditions. In addition, the error decreases with the number of nodes increases. This indicates that the method is convergent.
 
 For the elasticity problem, the error was approximated by comparing solutions on a fine mesh with coarser meshes. In this case a numerical convergence rate of $2.46$ was observed, when decreasing the element size, indicating that the method is convergent. However, decreasing error comes with the cost of increased computational time. Using a sparse solver decreases this time complexity. Finally we have that for this scheme, used to solve the elasticity problem, error decreases at almost the same rate as computational time increases, when decreasing the element size.
-	
-
 \bibliography{ref}
 
 \end{document}
