@@ -697,7 +697,7 @@ Assuming the analytical solution to \eqref{weak_formulation_elastic} is unknown,
 
 By using the Time functionality of Python, one can find the runtime, the number of seconds it takes to run the elasticity solver, $t_i$ given element size $h_i$. A plot of $\{\log h_i,\log \hat e_{i,x}\}_{i=1}^4$ is found in Figure \ref{error-convergence-elastic}, and we find the numerical convergence rate given the max norm to be $2.46$. Furthemore the runtime of system assembly and system solving for the different element sizes is found in Figure \ref{time-convergence-elastic}. We observe that the LU factorization has the highest time complexity which is as expected. It should also be noted that since we solve the equation for a two dimensional vectorfield on a two dimensional grid, reducing the element size (in one dimension), increases the number of nodes quadratically.
 
-\begin{figure}[t]
+\begin{figure}[b]
     \begin{subfigure}[t]{0.5\linewidth}
             \centering
                 \includegraphics[width=\linewidth]{figures/decreasing_h_error.pdf}

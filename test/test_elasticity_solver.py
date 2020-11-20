@@ -119,7 +119,7 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         # ax.plot_trisurf(p[:, 0], p[:, 1], U)
 
         plt.savefig("figures/plot_homogeneous_dirichlet_elastic_y.pdf")
-        plt.clf()
+        plt.close()
 
 
 def large_to_small_mapping(N_large, N_small):
@@ -236,7 +236,6 @@ class TestElasticSolverPerformance(unittest.TestCase):
         error_convergence = np.polyfit(np.log(element_sizes[:-1]), np.log(rel_errors), deg=1)[0]
 
         print("\n\nGenerating plot for solution convergence and time complexity for the linear elasticity problem ")
-
         plt.gcf().subplots_adjust(left=0.15)
         # plt.title("Relative deviance for different element sizes")
         plt.loglog(element_sizes[:-1], rel_errors, marker="o")
@@ -265,7 +264,7 @@ class TestElasticSolverPerformance(unittest.TestCase):
         plt.ylabel("Run time ($s$)")
         plt.xlabel("Element size, $h$")
         plt.savefig("figures/decreasing_h_runtime.pdf")
-        plt.clf()
+        plt.close()
 
 
 if __name__ == '__main__':
