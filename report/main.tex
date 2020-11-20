@@ -672,7 +672,6 @@ We implement the finite elemenet method for the elasticity problem described in 
 The recovered stress for each node is then calculated by averageing the stress over all neighbouring elements. For the previous numerical solution the recovered stress is shown in Figure \ref{solution-error-dirichlet-elastic-sigma-xx}. 
 
 
-
 \begin{figure}[ht]   
     \begin{subfigure}[b]{0.5\textwidth}
         \centering
@@ -690,11 +689,11 @@ The recovered stress for each node is then calculated by averageing the stress o
     \caption{The elasticity problem problem solved on the unit square mesh with $N = 256$ nodes. The top figures displays displacement $u_x$ to the left and the recovered stress $\sigma_{xx}$ to the right. The bottom figures displays the error in the nodal points for displacement and stress. For the displacement, we have the error $e_{x,i,j} = U_{x,i,j} - u_x(x_i,y_j)$.}
 \end{figure}
 
-\subsection*{Measure of performance}
+\subsection{Measure of performance}
 
 Assuming the analytical solution to \eqref{weak_formulation_elastic} is unknown, a way to estimate the convergence rate is to solve \eqref{weak_formulation_matrix} using very small elements with size $h_{fine}$, finding the corresponding numerical solution $\bm U_f$, and estimate the error by finding solutions with larger element sizes $h_i >> h_{fine}$, yielding solutions $\bm U_{h,i}$. Hence we find the estimated error in max norm $\hat e_{i,r} = \|U_{f,r} - U_{h,i,r} \|_{\infty}$, where $r\in \{x,y\}$. Let $h_i \in \{\frac{1}{2^i}\}_{i=1}^4$, and $h_{fine} = \frac{1}{2^6}$ yielding $\{\hat e_{i,r}\}_{i=1}^4$. The max norm is used, because, if the $l_2$ norm was used, one would experience a slight increase in the error with increasing number of nodes. Finding the slope of the linear regression curve of the points $\{\log h_i,\log  \hat e_{i,r}\}_{i=1}^4$, we obtain the rate of convergence for our numerical scheme. 
 
-By using the Time functionality of Python, one can find the runtime, the number of seconds it takes to run the elasticity solver, $t_i$ given element size $h_i$. A plot of $\{\log h_i,\log \hat e_{i,x}\}_{i=1}^4$ is found in Figure \ref{error-convergence-elastic}, and we find the numerical convergence rate given the max norm to be $2.46$. Furthemore the runtime over the different element sizes is found in Figure \ref{time-convergence-elastic} and the slope of the linear regression curve for the runtime is $-2.49$, meaning we get increasing runtime with decreasing element size, which is as expected. It should also be noted that since we solve the equation for a two dimensional vectorfield on a two dimensional grid, reducing the element size (in one dimension), increases the number of nodes quadratically, as $h_i = \frac{1}{2N_{1D}} = \frac{1}{4N_{2D}^2}$.
+By using the Time functionality of Python, one can find the runtime, the number of seconds it takes to run the elasticity solver, $t_i$ given element size $h_i$. A plot of $\{\log h_i,\log \hat e_{i,x}\}_{i=1}^4$ is found in Figure \ref{error-convergence-elastic}, and we find the numerical convergence rate given the max norm to be $2.46$. Furthemore the runtime of system assembly and system solving for the different element sizes is found in Figure \ref{time-convergence-elastic}. We observe that the LU factorization has the highetst time complexity which is as expected. It should also be noted that since we solve the equation for a two dimensional vectorfield on a two dimensional grid, reducing the element size (in one dimension), increases the number of nodes quadratically, as $h_i = \frac{1}{2N_{1D}} = \frac{1}{4N_{2D}^2}$.
 
 \begin{figure}[t]
     \begin{subfigure}[t]{0.5\linewidth}
@@ -706,7 +705,7 @@ By using the Time functionality of Python, one can find the runtime, the number 
         \begin{subfigure}[t]{0.5\linewidth}
             \centering
                 \includegraphics[width=\linewidth]{figures/decreasing_h_runtime.pdf}
-            \caption{Runtime, number of seconds to solve the elasticity problem on meshes with element sizes $h_i$ including the fine mesh with $h_{fine}.$}
+            \caption{Runtime, number of seconds to make and solve the discretized system for the elasicity problem on meshes with element sizes $h_i$ including the fine mesh with $h_{fine}.$ }
             \label{time-convergence-elastic}
         \end{subfigure}
         \label{fig-convergence-elastic}
@@ -714,11 +713,11 @@ By using the Time functionality of Python, one can find the runtime, the number 
     \end{figure}
 
 
-\subsection*{Optimize runtime of solver}
+\subsection{Optimize runtime of solver}
 
-Below follows a discussion on different ways to optimize the implemented finite element solver aiming to reduce the runtime. First it should be noted that the matrix $A_h$ in Equation \ref{weak_formulation_matrix} is sparse and by using a sparse matrix storage format, including a sparse solver for linear systems, we can obtain a quite large reduction in computational time.
-
-By using a profiler to find the runtime of the different functions in the code, two remarks should be made. First, when a sparse solver is used for the linear system $A \bm u_h = \bm b_h$, the most time consuming task is the assembly of $A,\bm b_h$. Secondly, within the assembly of $A,\bm b_h$, approximating the integrals over the basis functions is done with gaussian quadrature. In both problems, we use linear basis functions and given the weak formulations, we obtain integrals over constants. In the elasticity problem we furthermore solve on a grid in which the elements have same shape rotated in different directions. Thus we could find the integral for each direction; drasticly reducing the number of operations required to construct the $A$ matrix. This would yield a scheme that is less flexible to use with basis functions of higher order, however one would enable an increase in the speed of the computations. 
+To optimize the runtime we first try fokus on solving the linear system. Notice that the $A$ matrix is sparse so a sparse solver can be used. Furthermore $A$ is SPD so a conjugate gradient solver can also be utilized. As shown in Figure \ref{time-convergence-elastic} these approches gives a better time complexity, but solving the linear system still has the highet time complexity. 
+ 
+Secondly, within the assembly of $A,\bm b_h$, approximating the integrals over the basis functions is done with gaussian quadrature. In both problems, we use linear basis functions and given the weak formulations, we obtain integrals over constants. In the elasticity problem we furthermore solve on a grid in which the elements have same shape rotated in different directions. Thus we could find the integral for each direction; drasticly reducing the number of operations required to construct the $A$ matrix. This would yield a scheme that is less flexible to use with basis functions of higher order, however one would enable an increase in the speed of the computations. 
    
 \section{Conclusion}
 
