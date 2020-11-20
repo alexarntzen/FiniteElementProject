@@ -717,7 +717,7 @@ By using the Time functionality of Python, one can find the runtime, the number 
 
 
 \subsection{Optimize runtime of linear elasticity solver }
-To optimize the runtime we first fokus on solving the linear system. Notice that the $A$ matrix is sparse so a sparse solver can be used. Furthermore $A$ is symmetric positive definite so a conjugate gradient solver can also be utilized. As shown in Figure \ref{time-convergence-elastic} these approches gives a better time complexity, but solving the linear system still has the highetst time complexity. 
+To optimize the runtime we first fokus on solving the linear system. Notice that the $A$ matrix is sparse so a sparse solver can be used. Furthermore $A$ is symmetric positive definite so a conjugate gradient solver can also be utilized. As shown in Figure \ref{time-convergence-elastic} these approches give a better time complexity, but solving the linear system still has the highetst time complexity. 
  
 Secondly, within the assembly of $A,\bm b_h$, approximating the integrals over the basis functions is done with gaussian quadrature. In both problems, we use linear basis functions and given the weak formulations, we obtain integrals over constants. In the elasticity problem we furthermore solve on a grid in which the elements have same shape rotated in different directions. Thus we could find the integral for each direction; drasticly reducing the number of operations required to construct the $A$ matrix. This would yield a scheme that is less flexible to use with basis functions of higher order, however one would enable an increase in the speed of the computations. 
    
