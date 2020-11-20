@@ -41,7 +41,7 @@ def large_to_small_mapping(N_large, N_small):
 
     return l_to_s_2D
 
-
+# get the solution and computaiton time
 def get_solution(N, E, v):
     # p is coordinates of all nodes
     # tri is a list of indicies (rows in p) of all nodes belonging to one element
@@ -98,7 +98,6 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         E = 5
         v = 0.1
 
-
         # Maximum N / minimum stepsize, h = 1/(2**i_max)
         i_max = 6
         N_finest = 2 ** i_max + 1
@@ -123,7 +122,6 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
             r = (N_finest - 1) // (N - 1)
             l_to_s_index = np.array([np.arange(0 + j * r * N_finest, N_finest + j * r * N_finest, r).tolist() for j in
                                      range(0, N)]).flatten()
-            print(U_N.shape)
             max_error = np.max(np.abs(U_N[:, 0] - U_finest[:, 0][l_to_s_index]))
             print(f"h = {1 / N:.2f}, max error: {max_error:.5f} run time: {td:.3f}")
             self.assertAlmostEqual(max_error, 0, delta=10 / test_values[i])
@@ -135,6 +133,8 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         element_sizes = 1 / N_list
 
         error_convergence = np.polyfit(np.log(element_sizes[:-1]), np.log(rel_errors), deg=1)[0]
+
+        print("\n\nGenrating plot for solution convergence and time complexity for the linear elasticity problem ")
 
         plt.gcf().subplots_adjust(left=0.15)
         #plt.title("Relative deviance for different element sizes")
@@ -165,15 +165,14 @@ class TestElasticHomogeneousDirichlet(unittest.TestCase):
         E = 200
         v = 0.1
 
-        fig = plt.figure(figsize=plt.figaspect(2))
 
         p, tri, edge = gp.getPlate(N)
         edge -= 1  # The edge indexes seem to be off
         U = solve_elastic(p, tri, edge, C=get_C(E, v), f=get_f(E, v))
 
+        print("\n\nGenrating plot for homogeneous linear elasticity problem")
+        fig = plt.figure(figsize=plt.figaspect(2))
         ax = fig.add_subplot(2, 1, 1, projection='3d')
-        # ax.set_title("Numerical solution for Dirichlet")
-
         ax.set_zlabel("$U_{i,j}$")
         ax.set_xlabel("x")
         ax.set_ylabel("y")

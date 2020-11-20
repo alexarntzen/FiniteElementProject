@@ -1,7 +1,7 @@
 import numpy as np
 
 import femsolver.quadrature as qd
-from femsolver.finite_elements import IsogeometricLinearTriangle
+from femsolver.finite_elements import IsoparametricLinearTriangle
 
 
 def compose(f, g):
@@ -15,7 +15,7 @@ def function_multiply(f, g):
 # Warning: meshing and plotting only supports the linear triangle
 # But this solver can use any valid shape functions in 2D
 def get_A_F(p, tri, dirichlet_edges, f, g=None, neumann_edges=np.empty(0), Nq=4,
-            finite_element=IsogeometricLinearTriangle, tri_u=None):
+            finite_element=IsoparametricLinearTriangle, tri_u=None):
     # find the shape functions for the reference triangle
     if tri_u is None:
         tri_u = tri
@@ -41,12 +41,12 @@ def get_A_F(p, tri, dirichlet_edges, f, g=None, neumann_edges=np.empty(0), Nq=4,
             jacobian_det = np.linalg.det(X @ sf_geom_jac(ksi))
             return f(X @ sf_geom(ksi)) * sf_u(ksi) * jacobian_det
 
-        # finding A matrix
-        # A[element[alpha], element[beta]] += A_i[alpha,beta]
         # For linear geometry and solution shape functions we can calculate this integral only once, then scale it.
+        # integrate over reference element
         A[np.ix_(element_u, element_u)] += qd.quadrature2D(*ref_element_geom, Nq=1, g=left_integrand)
 
         # Add load to F vector
+        # integrate over reference element
         F[element_u] += qd.quadrature2D(*ref_element_geom, Nq, right_integrand)
 
         # apply neumann conditions if applicable
@@ -62,7 +62,6 @@ def get_A_F(p, tri, dirichlet_edges, f, g=None, neumann_edges=np.empty(0), Nq=4,
 
                     F[element_u] += qd.quadrature1D(vertex1, vertex2, Nq, g=right_integrand_neumann)
 
-                    # F[element[beta]] += qd.quadrature1D(vertex1, vertex2, Nq, function_multiply(H, g))
 
     # Applying dirichlet boundary conditions
     epsilon = 1e-100
@@ -76,6 +75,6 @@ def get_A_F(p, tri, dirichlet_edges, f, g=None, neumann_edges=np.empty(0), Nq=4,
 
 def solve(p, tri, dirichlet_edges, f, g=None, neumann_edges=np.empty(0), Nq=4):
     A, F = get_A_F(p, tri, dirichlet_edges, f, g, neumann_edges, Nq,
-            finite_element=IsogeometricLinearTriangle, tri_u=None )
+            finite_element=IsoparametricLinearTriangle, tri_u=None )
     U = np.linalg.solve(A, F)
     return U

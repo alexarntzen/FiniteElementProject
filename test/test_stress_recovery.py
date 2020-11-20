@@ -17,7 +17,7 @@ def Du(x):
         [2 * x[0] * (x[1] ** 2 - 1), 2 * x[1] * (x[0] ** 2 - 1)]
     ])
 
-
+# analytical solution 
 def sigma(x, C):
     Du_x = Du(x)
     strain_vector = np.array([
@@ -34,8 +34,9 @@ def sigma(x, C):
 
 
 class TestStressRecovery(unittest.TestCase):
-    # test some simple geometries
     def test_get_derivative(self):
+        # test some simple geometries to know that the derivative is correct
+
         Ps = np.array([
             [0, 0],
             [3, 0],
@@ -65,6 +66,8 @@ class TestStressRecovery(unittest.TestCase):
         nptest.assert_array_equal(get_derivative(U=U2, p=Ps2, element=[0, 2, 1]), DU2)
 
     def test_naive_stress_calculation_analytic(self):
+        # Test calculated stresss from analytical displacement u 
+
         N_list = 2 ** np.arange(2, 7)
         test_values = N_list ** 2 * 2
         print("\n\nComparing calculated stress to analytical stress:")
@@ -89,6 +92,7 @@ class TestStressRecovery(unittest.TestCase):
             self.assertAlmostEqual(rel_error, 0, delta=10 / test_values[i] ** 0.5)
 
     def test_naive_stress_recovery(self):
+        # Test calculated stress from numerically found displacement u 
         N_list = 2 ** np.arange(2, 7)
         test_values = N_list ** 2 * 2
         print("\n\nComparing recovered stress to analytical stress:")
@@ -125,7 +129,7 @@ class TestStressRecovery(unittest.TestCase):
 
         Sigma_exact = np.moveaxis(sigma(p.T, C), -1, 0)
 
-
+        print("\n\nPlotting recovered stress")
         ax = fig.add_subplot(2, 1, 1, projection='3d')
         if dim != [0,0]:
             ax.view_init(30, 120)

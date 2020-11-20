@@ -7,6 +7,6 @@ class LinearTriangle:
     shape_fun_jacobian = lambda ksi: np.array([[1, 0, -1], [0, 1, -1]]).T
 
 
-class IsogeometricLinearTriangle:
+class IsoparametricLinearTriangle:
     displacement = LinearTriangle
     geometry = LinearTriangle
