@@ -141,13 +141,13 @@ on the domain $\Omega$ given by the unit disk
     \Omega = \{(x,y) : x^2+ y^2 \leq 1 \}.
 \end{equation*}
 \begin{remark}
-Note that when $\partial \Omega_{D} = \partial \Omega$ we have the homogenous Dirichlet boundary conditions. Also, when $\partial \Omega_D = \emptyset$ the poission problem does not have a unique solution. In the rest of the text we assume $\partial \Omega_D \neq \emptyset$ 
+Note that for $\restr{u}{\partial \Omega_D} = 0$, when $\partial \Omega_{D} = \partial \Omega$ we have the homogenous Dirichlet boundary conditions. Also, when $\partial \Omega_D = \emptyset$ the poission problem does not have a unique solution. In the rest of the text we assume $\partial \Omega_D \neq \emptyset$ 
 \end{remark}
 
 
 
 \subsection{Analytical solution}
-We consider an analytical solution to the Poission problem \eqref{poission-problem} $u$
+We consider an analytical solution, $u$, to the Poission problem \eqref{poission-problem}
 \begin{proposition}\label{prop-analytical-solution}
     $u: \mathbb{R}^2 \rightarrow \mathbb{R}$ such that
 
@@ -167,9 +167,9 @@ By calculation
 
 \begin{equation*}
 \begin{aligned}
- u_{xx} &= 4\pi\cos(g(x,y)) - 16\pi^2x^2\sin(2\pi r^2)
+ u_{xx} &= 4\pi\cos(2\pi r^2) - 16\pi^2x^2\sin(2\pi r^2)
 \\
-u_{yy} &= 4\pi\cos(g(x,y)) - 16\pi^2y^2\sin(2\pi r^2),
+u_{yy} &= 4\pi\cos(2\pi r^2) - 16\pi^2y^2\sin(2\pi r^2),
 \end{aligned}
 \end{equation*}
 As $r^2 = x^2 + y^2$ we find by comparison
@@ -209,7 +209,7 @@ $u$ defined in Equation \eqref{analytical-solution} satisfies Equation \eqref{po
 \subsection{Weak formulation}
 
 \begin{proposition}
-    The weak formulation of \eqref{poission-problem} with homogeneous dirichlet boundary conditions is given by:  
+    The weak formulation of \eqref{poission-problem} with homogeneous Dirichlet and Neumann boundary conditions is given by:  
     \begin{equation*}
         \begin{aligned}
         &\text{find } u \in H_0^{1}(\Omega) : 
@@ -256,7 +256,7 @@ $u$ defined in Equation \eqref{analytical-solution} satisfies Equation \eqref{po
     \end{equation}
     This changes $a$ and $l$, as they now operate on a new function space. In addition the expression for $l$ changes to
     \begin{equation}
-        l(v) = \int_{\partial \Omega_N} \frac{\partial u}{\partial n} v \, d\gamma + \iint\limits_{\Omega} f v  \, dx \, dy.
+        l(v) = \int_{\partial \Omega_N} \underbrace{ \frac{\partial u}{\partial n}}_{=g} v \, d\gamma + \iint\limits_{\Omega} f v  \, dx \, dy.
         \label{neumann-conditions}
     \end{equation}
 \end{remark}
@@ -279,19 +279,19 @@ X_h = \text{span} \{\phi_i\}_{i=1}^n & & \phi_j(x_i,y_i) = \delta_{ij}.
 Hence we aim to find $u_h \in X_h$ $\forall v \in X_h$, meaning we can write
 \begin{equation*}
     \begin{aligned}
-u_h = \sum_{i=1}^n u_h^i \phi_i(x,y) & & v_h = \sum_{i=1}^n v_h^i \phi_i(x,y).
+u_h = \sum_{i=1}^n u_i \phi_i(x,y) & & v_h = \sum_{j=1}^n v_j \phi_j(x,y).
     \end{aligned}
 \end{equation*}
-Hence we get the weak formulation
+\noindent with $u_i,v_j \in \mathbb{R}$. Hence we get the weak formulation
 \begin{equation}
 \begin{aligned}
 a(u_h,v_h) &= l(v_h) 
 \\
 \iint\limits_{\Omega} 
-\sum_{i=1}^n u_h^i \nabla \phi_i \sum_{i=1}^n v_h^i \nabla\phi_i \, dx \, dy 
-&= \iint\limits_{\Omega} f \sum_{i=1}^n v_h^i \phi_i \, dx \, dy
+\sum_{i=1}^n u_i \nabla \phi_i \sum_{j=1}^n v_j \nabla\phi_j \, dx \, dy 
+&= \iint\limits_{\Omega} f \sum_{j=1}^n v_j \phi_j \, dx \, dy
 \\
-\sum_{i=1}^n\sum_{j=1}^n u_h^i v_h^i a(\phi_i,\phi_j) &= \sum_{i=1}^n v_h^i l(\phi_i)
+\sum_{i=1}^n\sum_{j=1}^n u_i v_j a(\phi_i,\phi_j) &= \sum_{j=1}^n v_j l(\phi_i)
 \\
 \bm v^T\bm A \bm u &= \bm v^T \bm f \quad \forall \bm v \in \mathbb R^n
 \\ \bm A \bm u &= \bm f.
@@ -306,9 +306,9 @@ With $\bm A, \bm u, \bm f$ given by
     \begin{aligned}
 \bm A &= [a(\phi_i,\phi_j)]_{i,j}
 \\ 
-\bm u &= [u_h^i]_i
+\bm u &= [u_i]_i
 \\
-\bm f &= [l(\phi_i)]_i & i,j = 1,\cdots,n
+\bm f &= [l(\phi_j)]_j & i,j = 1,\cdots,n
 \end{aligned}
 \end{equation}
 \begin{remark}
@@ -323,23 +323,29 @@ This is verified numerically by finding that $\textrm{rank}(\bm A) < n, \ \bm A 
 \end{remark}
 
 \subsection{Boundary conditions}
-As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on parts of the domain; $\restr{u}{\partial \Omega_D} =  0 $. This has not been considered in the given construction of $\bm A,\bm f$, which could be denoted as a proto problem. Hence, to find the solution $u \in X_h$ we will use the so called Big Number approach \cite[p. 16]{Lecture_Note_4} to enforce the Dirichlet boundary conditions. For nodes on the boundary $(x_i,y_i), i=n+1,\cdots\tilde n$ we set. 
+As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on parts of the domain; $\restr{u}{\partial \Omega_D} =  0 $. This has not been considered in the given construction of $\bm A,\bm f$, which could be denoted as a proto problem. Hence, to find the solution $u \in X_h$ we will use the so called Big Number approach \cite[p. 16]{Lecture_Note_4} to enforce the Dirichlet boundary conditions. With $\tilde n$ inner nodes, for nodes on the boundary $(x_i,y_i), i= \tilde n +1,\cdots, n$ we set:
 
 
 \begin{equation*}
     \begin{aligned}
     A_{ii} &= \frac{1}{\epsilon}, \, \epsilon << 1 \\
-    F_i &= 0
+    f_i &= 0
     \end{aligned}
 \end{equation*}
 which for a sufficiently small $\epsilon$ enforces the boundary conditions. In this way Dirichlet boundary conditions are enforced essentialy by restricting the function space. 
 
-Neumann boundary conditions are enforced in a natrual way by adding a term to $l$ as in Equation \eqref{neumann-conditions}.
+Neumann boundary conditions are enforced as in Equation \eqref{neumann-conditions} in the nodes $i$ where $(x_i,y_i) \in \partial \Omega_N$ yielding the discretized right hand side $\bm f$ one the form
+\begin{align}
+    f_i = l(\phi_i) + g(x_i,y_i)l(\phi_i).
+\end{align}
+
 
 \section{The elasticity problem } \label{seq-elasticity}
 
+We will now consider the linear elasticity equation, describing deformation and motion in a continuum. This requires certain assumptions yielding an approximative approach, hence we are limited to study small deformations on solid materials.
+
 \subsection{Boundary value problem}
-Let $\boldsymbol{u} : \Omega \rightarrow \mathbb{R}^2$ be the displacement of each point $\boldsymbol{x} \in \Omega$. Then the strain tensor is defined as 
+Let $\boldsymbol{u} : \Omega \rightarrow \mathbb{R}^2$ be the displacement of each point $\boldsymbol{x} \in \Omega \subset \mathbb{R}^2$. Then the strain tensor is defined as 
 \begin{equation} \label{eq-strain-tensor}
     \boldsymbol{\epsilon}(\boldsymbol{u}) = \frac{1}{2}(\nabla \boldsymbol{u} + \nabla \boldsymbol{u}^\intercal)
 \end{equation}
@@ -373,8 +379,8 @@ Finally, for a static body the Cauchy momentum equation results in
 \end{equation}
 where $\boldsymbol{f}$ is the force per area. Applying boundary conditions 
 \begin{align}
-    \boldsymbol{u}  = \boldsymbol{g} \quad \text{on} \quad \Omega_D   \\
-    \boldsymbol{\sigma} \cdot \boldsymbol{\hat{n}}  =  \boldsymbol{h} \quad \text{on} \quad \Omega_N,
+    \boldsymbol{u}  &= \boldsymbol{g} \quad \text{on} \quad \partial\Omega_D   \\
+    \boldsymbol{\sigma} \cdot \boldsymbol{\hat{n}}  &=  \boldsymbol{h} \quad \text{on} \quad \partial\Omega_N,
     \label{elasticity-bc}
 \end{align}
 result in the corresponding boundary value problem. 
@@ -404,12 +410,13 @@ Taking the dot product of  Equation \eqref{eq-cauchy-momentum} with a test funct
 \begin{equation} \label{eq-cauchy-expand}
     \int_\Omega{\boldsymbol{v}^\intercal \nabla \cdot \boldsymbol{\sigma}} \,dA = \sum_{i = 1,2}\left(\int_\Omega{\boldsymbol{v_i} \nabla \cdot \boldsymbol{\sigma_i}} \,dA \right),
 \end{equation}
-where $\boldsymbol{\sigma_i}$ correspons to the i-th row of the stress tensor $\boldsymbol{\sigma}$. 
+where $\boldsymbol{\sigma_i}$ corresponds to the i-th row of the stress tensor $\boldsymbol{\sigma}$. 
 Then applying the Divergence Theorem and $\nabla \cdot (v_i \boldsymbol{\sigma_i})  = v_i \nabla \cdot \boldsymbol{\sigma_i} + \boldsymbol{\sigma_i} \cdot \nabla v_i$ results in 
 \begin{equation} \label{eq-div-theorem-to-Cauchy-momentum}
     \int_\Omega{{v_i} \nabla \cdot \boldsymbol{\sigma_i}}  \,dA = -\int_\Omega{\boldsymbol{\sigma_i}^\intercal \nabla v_i}  \,dA +  \int_{\partial \Omega}{v_i \boldsymbol{\sigma_i} \cdot \boldsymbol{\hat{n}} }  \,dS.
 \end{equation}
-Interperating $\boldsymbol{v}$ as displacement we get the corresponding strain tensor $\boldsymbol{\epsilon} (\boldsymbol v)$. Expanding each term of Equation\eqref{eq-cauchy-expand} like Equation \eqref{eq-div-theorem-to-Cauchy-momentum} and inserting the strain tensor of $\boldsymbol{v}$ we get
+
+Interpreting $\boldsymbol{v}$ as displacement we get the corresponding strain tensor $\boldsymbol{\epsilon} (\boldsymbol v)$. Expanding each term of Equation\eqref{eq-cauchy-expand} like Equation \eqref{eq-div-theorem-to-Cauchy-momentum} and inserting the strain tensor of $\boldsymbol{v}$ we get
 \begin{equation}\label{eq-elastic-weak-left}
     \int_\Omega{\boldsymbol{v}^\intercal \nabla \cdot \boldsymbol{\sigma}} \,dA = -\int_\Omega{\tr[ \boldsymbol{\epsilon}(\boldsymbol v)\boldsymbol{\sigma}(\boldsymbol u)]} \,dA + \int_{\partial \Omega}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS.
 \end{equation}
@@ -426,7 +433,7 @@ The left side of this equation is the integral over $\boldsymbol{\overline \epsi
     \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u)} \,dA  &=\int_\Omega{\boldsymbol{v}^\intercal \boldsymbol{f}} \,dA + \int_{\partial \Omega}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS  \\
     &= \int_\Omega{\boldsymbol{v}^\intercal \boldsymbol{f}} \,dA + \underbrace{\int_{\partial \Omega_D}{\boldsymbol{v}^\intercal \boldsymbol{\sigma}}\boldsymbol{\hat{n} } \,dS}_{= \ 0} + \int_{\partial \Omega_N}{\boldsymbol{v}^\intercal \boldsymbol h} \,dS,
 \end{align}
-where the Neumann boundary conditions where incooroprated into the last step.
+where the Neumann boundary conditions were incoroprated into the last step.
 
 Since $\bm v$ was arbitrary the weak formulation follows. Furthermore, all $\bm u$ and $\bm v$ must belong to a space such that $\boldsymbol{\overline \epsilon}(\boldsymbol v)^\intercal C\boldsymbol{\overline \epsilon}(\boldsymbol u) \in {L^1}(\Omega)$. By linearity of the integral then $\nabla \bm u$ and $\nabla \bm v$ must be in $\left[{L^2}(\Omega)\right]^{2 \times 2}$; thus $\bm u$ and $\bm v$ must be in $ H^1_{\partial \Omega_D } \times H^1_{\partial \Omega_D } $
 \end{proof}
@@ -434,8 +441,8 @@ Since $\bm v$ was arbitrary the weak formulation follows. Furthermore, all $\bm 
     The case for nonhomogenous Dirichlet boundary conditions can be solved by lifting functions.
 \end{remark}
 \subsection{Galerkin projection}
-Again, lets find finite dimesional solutions $u_h \in X_h \subset X$
- %TODO: Comment that \varphi is piecewise linear
+Again, lets find finite dimesional solutions $\hat{\bm u_h} \in X_h \subset X$
+
 \begin{proposition}
     The finite dimensional equivalent of the weak formulation given in Proposition 4 is given by
 
@@ -455,7 +462,7 @@ Again, lets find finite dimesional solutions $u_h \in X_h \subset X$
         \end{align}
 
 
-    where each node $\hat i$ has two test functions
+    where each node $\hat i$ has two, piecewise linear, test functions
     
  
         \begin{align}
@@ -476,7 +483,7 @@ Again, lets find finite dimesional solutions $u_h \in X_h \subset X$
 \end{proposition}
 
 \begin{proof}
-    As $\bm u_h,\bm v_h \in X_h$ are projections into a finite subspace, we can write the functions as an expansion of basis functions $\bm \varphi$. Hence we can write 
+    As $\hat{\bm u_h},\bm v_h \in X_h$ are projections into a finite subspace, we can write the functions as an expansion of basis functions $\bm \varphi$. Hence we can write 
     $\bm v_h = \bm \varphi_j$ and $\bm{ \hat u_h} = \sum_i u_i \bm \varphi_i, u_i \in \mathbb{R}$. As $\bar \epsilon( \cdot )$ is linear we get equations for $j = 1,\cdots,n$ on the form
 
     \begin{align*}
@@ -508,7 +515,7 @@ Again, lets find finite dimesional solutions $u_h \in X_h \subset X$
 \subsection{Analytical solution}
 
 
-    We consider an analytical solution $u$ to the elasticity problem \eqref{eq-cauchy-momentum} with homogeneous Dirichlet boundary conditions.
+    We consider an analytical solution $\bm u$ to the elasticity problem \eqref{eq-cauchy-momentum} with only homogeneous Dirichlet boundary conditions.
 
 \begin{proposition} \label{prop-eleastic-test-case}
     $u: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ such that
