@@ -179,9 +179,6 @@ def get_solution(N, E, v):
     t2 = time.perf_counter()
     cg_time = t2 - t1
 
-    print(lu_time)
-    print(sparse_time)
-
     return U, make_time, lu_time, sparse_time, cg_time
 
 
@@ -248,10 +245,6 @@ class TestElasticSolverPerformance(unittest.TestCase):
         plt.xlabel("Element size, $h$")
         plt.savefig("figures/decreasing_h_error.pdf")
         plt.clf()
-
-
-        print(lu_times)
-        print(sparse_times)
 
         time_convergence_make = np.polyfit(np.log(element_sizes), np.log(make_times), deg=1)[0]
         time_convergence_LU = np.polyfit(np.log(element_sizes), np.log(lu_times), deg=1)[0]
