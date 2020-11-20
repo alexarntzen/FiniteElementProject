@@ -141,13 +141,13 @@ on the domain $\Omega$ given by the unit disk
     \Omega = \{(x,y) : x^2+ y^2 \leq 1 \}.
 \end{equation*}
 \begin{remark}
-Note that when $\partial \Omega_{D} = \partial \Omega$ we have the homogenous Dirichlet boundary conditions. Also, when $\partial \Omega_D = \emptyset$ the poission problem does not have a unique solution. In the rest of the text we assume $\partial \Omega_D \neq \emptyset$ 
+Note that for $\restr{u}{\partial \Omega_D} = 0$, when $\partial \Omega_{D} = \partial \Omega$ we have the homogenous Dirichlet boundary conditions. Also, when $\partial \Omega_D = \emptyset$ the poission problem does not have a unique solution. In the rest of the text we assume $\partial \Omega_D \neq \emptyset$ 
 \end{remark}
 
 
 
 \subsection{Analytical solution}
-We consider an analytical solution to the Poission problem \eqref{poission-problem} $u$
+We consider an analytical solution, $u$, to the Poission problem \eqref{poission-problem}
 \begin{proposition}\label{prop-analytical-solution}
     $u: \mathbb{R}^2 \rightarrow \mathbb{R}$ such that
 
@@ -167,9 +167,9 @@ By calculation
 
 \begin{equation*}
 \begin{aligned}
- u_{xx} &= 4\pi\cos(g(x,y)) - 16\pi^2x^2\sin(2\pi r^2)
+ u_{xx} &= 4\pi\cos(2\pi r^2) - 16\pi^2x^2\sin(2\pi r^2)
 \\
-u_{yy} &= 4\pi\cos(g(x,y)) - 16\pi^2y^2\sin(2\pi r^2),
+u_{yy} &= 4\pi\cos(2\pi r^2) - 16\pi^2y^2\sin(2\pi r^2),
 \end{aligned}
 \end{equation*}
 As $r^2 = x^2 + y^2$ we find by comparison
@@ -256,7 +256,7 @@ $u$ defined in Equation \eqref{analytical-solution} satisfies Equation \eqref{po
     \end{equation}
     This changes $a$ and $l$, as they now operate on a new function space. In addition the expression for $l$ changes to
     \begin{equation}
-        l(v) = \int_{\partial \Omega_N} \frac{\partial u}{\partial n} v \, d\gamma + \iint\limits_{\Omega} f v  \, dx \, dy.
+        l(v) = \int_{\partial \Omega_N} \underbrace{ \frac{\partial u}{\partial n}}_{=g} v \, d\gamma + \iint\limits_{\Omega} f v  \, dx \, dy.
         \label{neumann-conditions}
     \end{equation}
 \end{remark}
@@ -279,19 +279,19 @@ X_h = \text{span} \{\phi_i\}_{i=1}^n & & \phi_j(x_i,y_i) = \delta_{ij}.
 Hence we aim to find $u_h \in X_h$ $\forall v \in X_h$, meaning we can write
 \begin{equation*}
     \begin{aligned}
-u_h = \sum_{i=1}^n u_h^i \phi_i(x,y) & & v_h = \sum_{i=1}^n v_h^i \phi_i(x,y).
+u_h = \sum_{i=1}^n u_i \phi_i(x,y) & & v_h = \sum_{j=1}^n v_j \phi_j(x,y).
     \end{aligned}
 \end{equation*}
-Hence we get the weak formulation
+\noindent with $u_i,v_j \in \mathbb{R}$. Hence we get the weak formulation
 \begin{equation}
 \begin{aligned}
 a(u_h,v_h) &= l(v_h) 
 \\
 \iint\limits_{\Omega} 
-\sum_{i=1}^n u_h^i \nabla \phi_i \sum_{i=1}^n v_h^i \nabla\phi_i \, dx \, dy 
-&= \iint\limits_{\Omega} f \sum_{i=1}^n v_h^i \phi_i \, dx \, dy
+\sum_{i=1}^n u_i \nabla \phi_i \sum_{j=1}^n v_j \nabla\phi_j \, dx \, dy 
+&= \iint\limits_{\Omega} f \sum_{j=1}^n v_j \phi_j \, dx \, dy
 \\
-\sum_{i=1}^n\sum_{j=1}^n u_h^i v_h^i a(\phi_i,\phi_j) &= \sum_{i=1}^n v_h^i l(\phi_i)
+\sum_{i=1}^n\sum_{j=1}^n u_i v_j a(\phi_i,\phi_j) &= \sum_{j=1}^n v_j l(\phi_i)
 \\
 \bm v^T\bm A \bm u &= \bm v^T \bm f \quad \forall \bm v \in \mathbb R^n
 \\ \bm A \bm u &= \bm f.
@@ -306,9 +306,9 @@ With $\bm A, \bm u, \bm f$ given by
     \begin{aligned}
 \bm A &= [a(\phi_i,\phi_j)]_{i,j}
 \\ 
-\bm u &= [u_h^i]_i
+\bm u &= [u_i]_i
 \\
-\bm f &= [l(\phi_i)]_i & i,j = 1,\cdots,n
+\bm f &= [l(\phi_j)]_j & i,j = 1,\cdots,n
 \end{aligned}
 \end{equation}
 \begin{remark}
@@ -323,18 +323,22 @@ This is verified numerically by finding that $\textrm{rank}(\bm A) < n, \ \bm A 
 \end{remark}
 
 \subsection{Boundary conditions}
-As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on parts of the domain; $\restr{u}{\partial \Omega_D} =  0 $. This has not been considered in the given construction of $\bm A,\bm f$, which could be denoted as a proto problem. Hence, to find the solution $u \in X_h$ we will use the so called Big Number approach \cite[p. 16]{Lecture_Note_4} to enforce the Dirichlet boundary conditions. For nodes on the boundary $(x_i,y_i), i=n+1,\cdots\tilde n$ we set. 
+As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on parts of the domain; $\restr{u}{\partial \Omega_D} =  0 $. This has not been considered in the given construction of $\bm A,\bm f$, which could be denoted as a proto problem. Hence, to find the solution $u \in X_h$ we will use the so called Big Number approach \cite[p. 16]{Lecture_Note_4} to enforce the Dirichlet boundary conditions. With $\tilde n$ inner nodes, for nodes on the boundary $(x_i,y_i), i= \tilde n +1,\cdots, n$ we set:
 
 
 \begin{equation*}
     \begin{aligned}
     A_{ii} &= \frac{1}{\epsilon}, \, \epsilon << 1 \\
-    F_i &= 0
+    f_i &= 0
     \end{aligned}
 \end{equation*}
 which for a sufficiently small $\epsilon$ enforces the boundary conditions. In this way Dirichlet boundary conditions are enforced essentialy by restricting the function space. 
 
-Neumann boundary conditions are enforced in a natrual way by adding a term to $l$ as in Equation \eqref{neumann-conditions}.
+Neumann boundary conditions are enforced as in Equation \eqref{neumann-conditions} in the nodes $i$ where $(x_i,y_i) \in \partial \Omega_N$ yielding the discretized $l$ one the form
+\begin{align}
+    f_i = l(\phi_i) + g(x_i,y_i)l(\phi_i).
+\end{align}
+
 
 \section{The elasticity problem } \label{seq-elasticity}
 
