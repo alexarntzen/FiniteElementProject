@@ -27,8 +27,12 @@ To test the methods developed for part 2 of the project run
 ```
 python3 -m unittest test.test_stress_recovery.TestStressRecovery
 ```
-, or 
+,  
 ```
 python3 -m unittest test.test_elasticity_solver.TestElasticHomogeneousDirichlet
 ```
-. 
+or 
+```
+python3 -m unittest test.test_elasticity_solver.TestElasticSolverPerformance
+```
+.

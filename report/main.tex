@@ -1,4 +1,4 @@
-\documentclass[5pt,a4paper,english]{elsarticle}% 5p gir 2 kolonner pr side. 1p gir 1 kolonne pr side.
+\documentclass[a4paper,english]{elsarticle}% 5p gir 2 kolonner pr side. 1p gir 1 kolonne pr side.
 %\documentclass[11pt,a4paper,norsk]{article} % setter hvilken type dokument. Kan også være book eller report. I klammeparantes settes fontstørrelse, papirstørrelse og språk.
 
 \usepackage[utf8]{inputenc} %- Løser problem med å skrive andre enn engelske bokstaver f.eks æ,ø,å.
@@ -334,11 +334,6 @@ As stated in \eqref{poission-problem} we have homogenous Dirichlet conditions on
 \end{equation*}
 which for a sufficiently small $\epsilon$ enforces the boundary conditions. In this way Dirichlet boundary conditions are enforced essentialy by restricting the function space. 
 
-Neumann boundary conditions are enforced as in Equation \eqref{neumann-conditions} in the nodes $i$ where $(x_i,y_i) \in \partial \Omega_N$ yielding the discretized right hand side $\bm f$ one the form
-\begin{align}
-    f_i = l(\phi_i) + g(x_i,y_i)l(\phi_i).
-\end{align}
-
 
 \section{The elasticity problem } \label{seq-elasticity}
 
@@ -385,7 +380,7 @@ where $\boldsymbol{f}$ is the force per area. Applying boundary conditions
 \end{align}
 result in the corresponding boundary value problem. 
 \subsection{Weak formulation}
-\begin{proposition}
+\begin{proposition} \label{prop-weak-eleastic}
     % Skal vi ha med lifing functions her ??. Ikke enda?
     The weak formulation of \eqref{eq-cauchy-momentum} with homogeneous dirichlet conditions is given by:  
     \begin{equation*}
@@ -441,11 +436,10 @@ Since $\bm v$ was arbitrary the weak formulation follows. Furthermore, all $\bm 
     The case for nonhomogenous Dirichlet boundary conditions can be solved by lifting functions.
 \end{remark}
 \subsection{Galerkin projection}
-Again, lets find finite dimesional solutions $\hat{\bm u_h} \in X_h \subset X$
+Again, lets find finite dimesional solutions $ u_h \in X_h \subset X$
 
 \begin{proposition}
-    The finite dimensional equivalent of the weak formulation given in Proposition 4 is given by
-
+    The galerkin projection of the solution of the weak formulation given in Proposition \ref{prop-weak-eleastic} is given by
 
         \begin{align}
         &\text{find } \bm u_h \in \mathbb{R}^n : \\
@@ -483,11 +477,11 @@ Again, lets find finite dimesional solutions $\hat{\bm u_h} \in X_h \subset X$
 \end{proposition}
 
 \begin{proof}
-    As $\hat{\bm u_h},\bm v_h \in X_h$ are projections into a finite subspace, we can write the functions as an expansion of basis functions $\bm \varphi$. Hence we can write 
-    $\bm v_h = \bm \varphi_j$ and $\bm{ \hat u_h} = \sum_i u_i \bm \varphi_i, u_i \in \mathbb{R}$. As $\bar \epsilon( \cdot )$ is linear we get equations for $j = 1,\cdots,n$ on the form
+    As $ u_h, v_h \in X_h$ are projections into a finite subspace, we can write the functions as an expansion of basis functions $\bm \varphi$. Hence we can write 
+    $ v_h = \bm \varphi_j$ and $ u_h = \sum_i u_i \bm \varphi_i, u_i \in \mathbb{R}$. As $\bar \epsilon( \cdot )$ is linear we get equations for $j = 1,\cdots,n$ on the form
 
     \begin{align*}
-        a(\bm{ \hat u_h},\bm v_h) &= \int_\Omega{ \boldsymbol{\overline \epsilon}(\bm v_h)^\intercal C\boldsymbol{\overline \epsilon}(\bm{ \hat u_h})} \,dA  \\
+        a( u_h, v_h) &= \int_\Omega{ \boldsymbol{\overline \epsilon}( v_h)^\intercal C\boldsymbol{\overline \epsilon}( u_h)} \,dA  \\
         &=\sum_i u_i  \int_\Omega{ \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_j)^\intercal C  \boldsymbol{\overline \epsilon}(\boldsymbol \varphi_i)} \,dA \\
         &= \sum_i u_i a(\bm \varphi_j,\bm \varphi_i) \\
         &= A_j \bm u_h \\
@@ -506,8 +500,11 @@ Again, lets find finite dimesional solutions $\hat{\bm u_h} \in X_h \subset X$
     \begin{align*}
         a(\bm u_h,\bm v_h) &= l(\bm v_h), \\
         A_j \bm u_h &= b_j, \,\, j = 1,\cdots,n\\
-        \implies A\bm u_h &= \bm b_h.
-    \end{align*}
+    \end{align*}. 
+    Thus we have 
+    \begin{equation*}
+        A\bm u_h = \bm b_h
+    \end{equation*}
 
 \end{proof}
 
@@ -575,8 +572,8 @@ we get
     &= -\bm f^T.
 \end{align}
 
-On the boundary $\partial \Omega = (-1,1)\times(-1,1)$ we get $\bm u(x,y) = \bm 0 \, \forall (x,y) \in \partial \Omega$.
-Hence we find that $\bm u$ fullfills all requirements in proposition 6.  
+On the boundary $\partial \Omega = (-1,1)\times(-1,1)$ we get $\bm u(x,y) = \bm 0 \ \forall \ (x,y) \in \partial \Omega$.
+Hence we find that $\bm u$ fullfills all requirements in proposition \ref{prop-eleastic-test-case}.  
 \end{proof}
     
 
