@@ -1,8 +1,6 @@
 import numpy as np
-from scipy import linalg
 import scipy.sparse as sp
-from scipy.sparse.linalg import spsolve
-
+import scipy.sparse.linalg as splin
 import femsolver.quadrature as qd
 from femsolver.finite_elements import IsoparametricLinearTriangle
 
@@ -145,6 +143,7 @@ def solve_elastic(p, tri, dirichlet_edges, C, f, g=None, neumann_edges=np.empty(
     # get the system sparse
     A_sp = sp.csr_matrix(A)
 
-    U = sp.linalg.spsolve(A_sp, F)
+    U = splin.spsolve(A_sp, F)
 
     return reshape_U(U)
+
