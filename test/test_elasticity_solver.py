@@ -158,26 +158,29 @@ def get_solution(N, E, v):
     p, tri, edge = gp.getPlate(N)
     edge -= 1
 
-    # Using time.time() to find the runtime of solve_elastic()
-    t1 = time.time()
+    # Using time.perf_counter() to find the runtime of solve_elastic()
+    t1 = time.perf_counter()
     A, F = get_elasticity_A_F(p, tri, edge, C=get_C(E, v), f=get_f(E, v))
-    t2 = time.time()
+    t2 = time.perf_counter()
     make_time = t2 - t1
 
-    t1 = time.time()
+    t1 = time.perf_counter()
     U = solve_LU(A, F)
-    t2 = time.time()
+    t2 = time.perf_counter()
     lu_time = t2 - t1
 
-    t1 = time.time()
+    t1 = time.perf_counter()
     U = solve_sparse(A, F)
-    t2 = time.time()
+    t2 = time.perf_counter()
     sparse_time = t2 - t1
 
-    t1 = time.time()
+    t1 = time.perf_counter()
     U = solve_cg(A, F)
-    t2 = time.time()
+    t2 = time.perf_counter()
     cg_time = t2 - t1
+
+    print(lu_time)
+    print(sparse_time)
 
     return U, make_time, lu_time, sparse_time, cg_time
 
@@ -245,6 +248,10 @@ class TestElasticSolverPerformance(unittest.TestCase):
         plt.xlabel("Element size, $h$")
         plt.savefig("figures/decreasing_h_error.pdf")
         plt.clf()
+
+
+        print(lu_times)
+        print(sparse_times)
 
         time_convergence_make = np.polyfit(np.log(element_sizes), np.log(make_times), deg=1)[0]
         time_convergence_LU = np.polyfit(np.log(element_sizes), np.log(lu_times), deg=1)[0]
